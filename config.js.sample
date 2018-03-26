@@ -4,9 +4,10 @@ exports.config = {
 	create_assets: false,
 
 	db: {
-		address: 'localhost',
+		host: 'localhost',
 		user: 'root',
 		password: '',
+		database: 'database',
 	},
 
 	http: {

@@ -15,7 +15,9 @@
 		"nodemailer": "*",
 		"twig": "*",
 		"express-asset-manager": "*",
+		"uglify-js": "2.6.0",
 		"node-minify": "*",
-		"express-minify-html": "*"
+		"express-minify-html": "*",
+		"mysql2": "*"
 	}
 }
