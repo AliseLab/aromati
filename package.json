@@ -1,0 +1,21 @@
+{
+	"name": "landing_template",
+	"version": "1.0.0",
+	"description": "landing template",
+	"author": "",
+	"main": "app.js",
+	"scripts": {
+		"start": "node app.js"
+	},
+	"dependencies": {
+		"body-parser": "*",
+		"express": "*",
+		"express-locale": "*",
+		"node-gyp": "^3.6.2",
+		"nodemailer": "*",
+		"twig": "*",
+		"express-asset-manager": "*",
+		"node-minify": "*",
+		"express-minify-html": "*"
+	}
+}

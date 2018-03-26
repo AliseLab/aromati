@@ -1,0 +1,51 @@
+{% extends 'layouts/main.html.twig' %}
+
+{% block content %}
+
+<header>
+	<div class="first">
+    	<a href="tel:{{ config.site.phone }}" class="phone">{{ config.site.phone }}</a>
+    	<a href="mailto:{{ config.site.social.email }}" class="email">{{ config.site.social.email }}</a>
+    	<span class="languages">
+    		{% for lang, label in languages %}
+    			<a href="/{{ lang }}" {% if lang == language %} class="active" {% endif %}>{{ label }}</a>
+    		{% endfor %}
+    	</span>
+	</div>
+	<div class="second switcher">
+    	<a href="#home"><img class="logo" src="img/logo_text.png" alt="{{ config.site.title }}"> </a>
+    	<div class="mobile-menu fa fa-bars"></div>
+    	<nav>
+    		{# TODO get from db {% for section in config.sections %}
+        		<a href="#{{ section }}">{{ t( 'section_' ~ section ) }}</a>
+        	{% endfor %} #}
+    	</nav>
+    	<div class="clear"></div>
+    </div>
+</header>
+
+<section data-section="home" class="home" id="home">
+	HOME
+</section>
+
+{# TODO get from db
+{% for section in config.sections %}
+	{% set label = 'section_' ~ section %}
+	{% if section == 'forwhom' %}
+		{% set label = label ~ '_title' %}
+	{% endif %}
+	<section data-section="{{ section }}" class="{{ section }} faded">
+		<span class="anchor" id="{{ section }}"></span>
+		<article>
+			<h1>{{ t( label ) }}</h1>
+			{% include 'sections/' ~ section ~ '.html.twig' %}
+		</article>
+	</section>
+{% endfor %}
+#}
+
+<footer>
+    TODO: all rights reserved
+</footer>
+
+{% endblock %}

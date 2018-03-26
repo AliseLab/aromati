@@ -1,0 +1,16 @@
+exports.config = {
+
+	debug: true,
+	create_assets: false,
+
+	db: {
+		address: 'localhost',
+		user: 'root',
+		password: '',
+	},
+
+	http: {
+		port: 8080,
+	},
+
+};
