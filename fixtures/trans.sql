@@ -12,7 +12,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping structure for table landing.trans
-DROP TABLE IF EXISTS `trans`;
 CREATE TABLE IF NOT EXISTS `trans` (
   `id` varchar(32) NOT NULL,
   `language` varchar(2) NOT NULL,
@@ -20,8 +19,11 @@ CREATE TABLE IF NOT EXISTS `trans` (
   PRIMARY KEY (`id`,`language`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table landing.trans: ~0 rows (approximately)
+-- Dumping data for table landing.trans: ~2 rows (approximately)
 /*!40000 ALTER TABLE `trans` DISABLE KEYS */;
+INSERT IGNORE INTO `trans` (`id`, `language`, `text`) VALUES
+	('settings_email', 'lv', 'lv.email@email.com'),
+	('settings_email', 'ru', 'ru.email@email.com');
 /*!40000 ALTER TABLE `trans` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -12,18 +12,19 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping structure for table landing.languages
-DROP TABLE IF EXISTS `languages`;
 CREATE TABLE IF NOT EXISTS `languages` (
   `name` varchar(2) NOT NULL,
-  `label` text NOT NULL
+  `label` text NOT NULL,
+  `order` smallint(1) NOT NULL,
+  KEY `order` (`order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table landing.languages: ~3 rows (approximately)
 /*!40000 ALTER TABLE `languages` DISABLE KEYS */;
-INSERT IGNORE INTO `languages` (`name`, `label`) VALUES
-	('en', 'En'),
-	('ru', 'Ru'),
-	('lv', 'Lv');
+INSERT IGNORE INTO `languages` (`name`, `label`, `order`) VALUES
+	('en', 'En', 1),
+	('ru', 'Ru', 2),
+	('lv', 'Lv', 3);
 /*!40000 ALTER TABLE `languages` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

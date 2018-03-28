@@ -1,27 +1,25 @@
 exports.run = function( data, next ) {
 	
 	var BodyParser = require( 'body-parser' );
-	var Mailer = require( 'nodemailer' );
-	
 	data.app.use( BodyParser.urlencoded( {
 		extended: false,
 	} ));
 	
+	var Mailer = require( 'nodemailer' );
+	var transport = Mailer.createTransport( JSON.parse( data.settings.mail_settings ) );
+	
 	data.app.post( '/contact', function( req, res ) {
 		
-		var transport = Mailer.createTransport( data.getconfig( req.language ).mail.transport );
+		var title = 'Order from ' + req.body.email;
 		
-		var title = 'Aliselab contact from ' + req.body.email;
-		
-		// TODO: get template from db
-		/*data.twig.renderFile( './views/mail.html.twig', {
+		data.twig.renderFile( './views/mail.html.twig', {
 			title: title,
 			data: req.body
 		}, ( err, html ) => {
 			
 			var mailOptions = {
 				from: req.body.email,
-				to: data.getconfig( req.language ).mail.destination,
+				to: data.settings.email,
 				subject: title,
 				html: html,
 			};
@@ -35,11 +33,10 @@ exports.run = function( data, next ) {
 					console.log( 'Email sent: ' + info.response );
 					url += 'success';
 				}
-				url += '#contacts';
 				res.redirect( url );
 			}); 
 			
-		});*/
+		});
 		
 	});
 	

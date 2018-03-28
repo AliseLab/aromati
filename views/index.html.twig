@@ -2,10 +2,16 @@
 
 {% block content %}
 
+{% if mailresult %}
+<div class="message mailresult {{ mailresult }}">
+	{{ sections[ 'mail_' ~ mailresult ].data }}{% if mailresult == 'error' %} <a href="mailto:{{ settings.email }}">{{ settings.email }}</a>{% endif %}
+</div>
+{% endif %}
+
 <header>
 	<div class="first">
-    	<a href="tel:{{ config.site.phone }}" class="phone">{{ config.site.phone }}</a>
-    	<a href="mailto:{{ config.site.social.email }}" class="email">{{ config.site.social.email }}</a>
+    	<a href="tel:{{ settings.phone }}" class="phone">{{ settings.phone }}</a>
+    	<a href="mailto:{{ settings.email }}" class="email">{{ settings.email }}</a>
     	<span class="languages">
     		{% for lang, label in languages %}
     			<a href="/{{ lang }}" {% if lang == language %} class="active" {% endif %}>{{ label }}</a>
@@ -13,39 +19,37 @@
     	</span>
 	</div>
 	<div class="second switcher">
-    	<a href="#home"><img class="logo" src="img/logo_text.png" alt="{{ config.site.title }}"> </a>
+    	<a href="#home">{{ settings.site_title }}</a>
     	<div class="mobile-menu fa fa-bars"></div>
     	<nav>
-    		{# TODO get from db {% for section in config.sections %}
-        		<a href="#{{ section }}">{{ t( 'section_' ~ section ) }}</a>
-        	{% endfor %} #}
+    		{% for section in sections.sections %}
+    			{% if section.title %}
+        			<a href="#{{ section.name }}">{{ section.title }}</a>
+        		{% endif %}
+        	{% endfor %}
     	</nav>
     	<div class="clear"></div>
     </div>
 </header>
 
-<section data-section="home" class="home" id="home">
-	HOME
+<section data-section="home">
+	<span class="anchor" id="home"></span>
+	{{ sections.home.data }}
 </section>
 
-{# TODO get from db
-{% for section in config.sections %}
-	{% set label = 'section_' ~ section %}
-	{% if section == 'forwhom' %}
-		{% set label = label ~ '_title' %}
-	{% endif %}
-	<section data-section="{{ section }}" class="{{ section }} faded">
-		<span class="anchor" id="{{ section }}"></span>
+{% for section in sections.sections %}
+	<section data-section="{{ section.name }}" class="faded">
+		<span class="anchor" id="{{ section.name }}"></span>
 		<article>
-			<h1>{{ t( label ) }}</h1>
-			{% include 'sections/' ~ section ~ '.html.twig' %}
+			<div>
+				{{ section.data }}
+			</div>
 		</article>
 	</section>
 {% endfor %}
-#}
 
 <footer>
-    TODO: all rights reserved
+    {{ sections.footer.data }}
 </footer>
 
 {% endblock %}

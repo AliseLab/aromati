@@ -1,43 +1,39 @@
-/*var deep_merge = ( a, b ) => {
-	var ret = JSON.parse( JSON.stringify( a ) );
-	for ( var k in b ) {
-		if ( typeof( ret[ k ] ) === 'object' ) {
-			ret[ k ] = deep_merge( ret[ k ], b[ k ] );
-		}
-		else {
-			ret[ k ] = b[ k ];
-		}
-	}
-	return ret;
-}
-*/
-
 exports.run = function( data, next ) {
 	
 	data.config = require( '../config.js' ).config;
 	
-	// TODO: needed?
-	/*var config_i18n = {};
+	data.settings = {};
 	
-	data.fs.readdir( './messages', ( err, files ) => {
-		files.forEach( file => {
-			var lang = file.replace( /\.js/, '' );
-			try {
-				var custom_config = require( '../config.' + lang + '.js' ).config;
-				config_i18n[ lang ] = deep_merge( data.config, custom_config );
-			} catch ( e ) {
-				config_i18n[ lang ] = deep_merge( data.config, {} );
+	data.load_settings = ( next ) => {
+		data.settings = {};
+		
+		data.sql.query( '\
+			SELECT `settings`.`key`, `settings`.`value_text` AS value, `trans`.`language`, `trans`.`text` AS value_i18n FROM `settings`\
+			LEFT JOIN `trans` ON `trans`.`id` = `settings`.`value_trans`\
+		', [], ( err, results, fields ) => {
+			if ( err )
+				console.log( err );
+			else {
+				data.settings.i18n = {};
+				for ( lang in data.languages ) {
+					data.settings.i18n[ lang ] = {};
+					results.forEach( result => {
+						var value = null;
+						if ( result.value_i18n && result.language == lang )
+							value = result.value_i18n;
+						else {
+							data.settings[ result.key ] = result.value;
+							if ( typeof data.settings.i18n[ lang ][ result.key ] === 'undefined' )
+								value = result.value;
+						}
+						if ( value )
+							data.settings.i18n[ lang ][ result.key ] = value;
+					});
+				}
+				next();
 			}
 		});
-		next();
-	});
-	
-	data.getconfig = ( language ) => {
-		if ( typeof( config_i18n[ language ] ) !== 'undefined' )
-			return config_i18n[ language ];
-		else
-			return data.config;
-	};*/
+	};
 	
 	next();
 }

@@ -36,6 +36,8 @@ exports.run = function( data, next ) {
 		}
 		
 		if ( !failed ) {
+			data.sql = sql;
+			
 			if ( update_needed ) {
 				console.log( 'loading fixtures...' );
 				data.fs.readdir( './fixtures', ( err, files ) => {

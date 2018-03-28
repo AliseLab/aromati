@@ -1,11 +1,14 @@
 exports.run = function( data, next ) {
 
+	var sections = {};
+	
 	var render_func = function( req, res ) {
+		
 		res.render( 'index.html.twig', {
 			'languages' : data.languages,
 			'language' : req.language,
-			// TODO: needed?
-			//'config' : data.getconfig( req.language ),
+			'settings' : data.settings.i18n[ req.language ],
+			'sections' : sections[ req.language ],
 			'config' : data.config,
 			'mailresult' : req.query.mailresult,
 			'js' : data.js,
@@ -15,7 +18,7 @@ exports.run = function( data, next ) {
 	}
 	
 	data.app.get( '/', function( req, res ) {
-		var selected_language = 'en'; // TODO: get from db
+		var selected_language = data.settings.default_language;
 		var to_try = [];
 		to_try = to_try.concat([
 			req.locale.toString(),
@@ -29,13 +32,32 @@ exports.run = function( data, next ) {
 			return false;
 			
 		});
-		// TODO: multilang res.redirect( '/' + selected_language );
-		render_func( req, res );
+		res.redirect( '/' + selected_language );
 	});
 	
 	for ( lang in data.languages ) {
 		data.app.get( '/' + lang, render_func );
 	}
 	
-	next();
+	data.load_sections = ( next ) => {
+		for ( lang in data.languages ) {
+			sections[ lang ] = {};
+			sections[ lang ].sections = {};
+		}
+		data.sql.query( 'SELECT `name`, `title`, `language`, `data`, `special` from `sections` ORDER BY `order` ASC', [], ( err, results, fields ) => {
+			if ( err ) {
+				console.log( err );
+			}
+			else {
+				results.forEach( result => {
+					if ( !result.special )
+						sections[ result.language ].sections[ result.name ] = result;
+					else
+						sections[ result.language ][ result.special ] = result;
+				});
+				next();
+			}
+		});
+	};
+	data.load_sections( next );
 }

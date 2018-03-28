@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<title>{{ title }}</title>
+	</head>
+	<body>
+		<h2>
+			{{ title }}
+		</h2>
+		<table width="100%" border="1">
+		{% for key, value in data %}
+			<tr>
+				<th>{{ key }}</th>
+				<td>
+					{% if key == 'comments' %}<pre>{% endif %}
+					{{ value }}
+					{% if key == 'comments' %}</pre>{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+		</table>
+	</body>
+</html>

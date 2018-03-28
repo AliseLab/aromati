@@ -1,8 +1,5 @@
 exports.run = function( data, next ) {
-	
-	// TODO: data.languages
-	data.languages = { 'en' : 'En' };
-	
+
 	var Locale = require( 'express-locale' );
 	var locale = Locale();
 
@@ -10,7 +7,7 @@ exports.run = function( data, next ) {
 	data.languages = {};
 	
 	var set_locale = function ( req, res, next ) {
-		var selected_language = 'en'; // TODO: get from db
+		var selected_language = data.settings.default_language;
 		var lang = req.url.substring( 1 );
 		var i = lang.indexOf( '?' );
 		if ( i >= 0 )
@@ -29,6 +26,20 @@ exports.run = function( data, next ) {
 	data.app.use( locale );
 	data.app.use( set_locale );
 	
-	next();
-
+	data.load_languages = ( next ) => {
+		data.sql.query( 'SELECT `name`, `label` from `languages` ORDER BY `order` ASC', [], ( err, results, fields ) => {
+			
+			if ( err ) {
+				console.log( err );
+			}
+			else {
+				data.languages = {};
+				results.forEach( result => {
+					data.languages[ result.name ] = result.label;
+				});
+				data.load_settings( next );
+			}	
+		});
+	};
+	data.load_languages( next );
 }
