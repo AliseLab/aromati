@@ -30,7 +30,7 @@ exports.run = function( data, next ) {
 									'config' : data.config,
 									'js' : data.js,
 									'css' : data.css,
-									'messages' : messages,
+									'messages' : data.messages,
 								});
 							}
 							
