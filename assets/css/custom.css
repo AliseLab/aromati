@@ -1,0 +1,23 @@
+.navbar-header .languages {
+	padding: 15px;
+	padding-bottom: 0;
+}
+
+.navbar-header .navbar-brand {
+	padding-top: 0;
+}
+
+.navbar-header .languages a {
+	color: #ddf;
+	font-size: 1.2em;
+	margin-right: 0.1em;
+}
+
+.navbar-header .languages a:hover,
+.navbar-header .languages a.active {
+	color: white;
+}
+
+.navbar-header .languages a.active {
+	font-weight: bold;
+}

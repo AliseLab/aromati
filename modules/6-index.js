@@ -1,7 +1,7 @@
 exports.run = function( data, next ) {
 
 		var sections = [
-			'service', 'contact', 'about', 'letsgo', 'project', 'team', 'price', 'overview', 'contact2'
+			'service', 'contact', 'about', 'letsgo', 'project', 'team', 'price', 'contact2', 'overview'
 		];
 		
 		var render_func = function( req, res ) {
