@@ -22,6 +22,8 @@ exports.run = function( data, next ) {
 							loaded++;
 							if ( loaded == files.length ) {
 							
+								data.set_language( req.language );
+								
 								res.render( 'index.html.twig', {
 									'languages' : data.languages,
 									'language' : req.language,

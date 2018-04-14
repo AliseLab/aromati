@@ -59,4 +59,11 @@ exports.run = function( data, next ) {
 			}
 		});
 	};
+	
+	data.trans = ( msgid, lang ) => {
+		if ( typeof data.messages[ lang ][ msgid ] == 'undefined' )
+			return msgid;
+		else
+			return data.messages[ lang ][ msgid ];
+	}
 }

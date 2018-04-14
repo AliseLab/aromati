@@ -3,6 +3,16 @@ exports.run = function( data, next ) {
 	data.twig = require( 'twig' );
 	if ( data.config.debug )
 		data.twig.cache( false );
+
+	var language = '';
+	
+	data.set_language = lang => {
+		language = lang;
+	}
+	
+	data.twig.extendFunction( 'trans', ( msgid ) => {
+		return data.trans( msgid, lang );
+	});
 	
 	if ( !data.config.debug ) {
 		var Minify = require( 'express-minify-html' );
