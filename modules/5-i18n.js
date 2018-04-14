@@ -27,7 +27,7 @@ exports.run = function( data, next ) {
 	data.app.use( set_locale );
 	
 	data.load_languages = ( next ) => {
-		data.sql.query( 'SELECT `name`, `label` from `languages` ORDER BY `order` ASC', [], ( err, results, fields ) => {
+		data.sql.query( 'SELECT `name`, `label` FROM `languages` ORDER BY `order` ASC', [], ( err, results ) => {
 			
 			if ( err ) {
 				console.log( err );
@@ -42,4 +42,21 @@ exports.run = function( data, next ) {
 		});
 	};
 	data.load_languages( next );
+	
+	data.load_messages = ( next ) => {
+		data.sql.query( 'SELECT `id`, `language`, `text` FROM `trans`', [], ( err, results ) => {
+			if ( err ) {
+				console.log( err );
+			}
+			else {
+				data.messages = {};
+				results.forEach( result => {
+					if ( typeof data.messages[ result.language ] == 'undefined' )
+						data.messages[ result.language ] = {};
+					data.messages[ result.language ][ result.id ] = result.text;
+				});
+				next();
+			}
+		});
+	};
 }

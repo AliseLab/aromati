@@ -8,7 +8,9 @@ var data = {
 
 data.fs.readdir( './modules', ( err, files ) => {
 	files.forEach( file => {
-		data.modules[ file.replace( /\.js/, '' ) ] = require( './modules/' + file );
+		if ( file.indexOf( '.js' ) == file.length - 3 ) {
+			data.modules[ file.replace( /\.js/, '' ) ] = require( './modules/' + file );
+		}
 	});
 	var modulenames = [];
 	for ( var name in data.modules )

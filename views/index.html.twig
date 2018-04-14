@@ -5,9 +5,9 @@
 <div class="main-wrapper">
 	{% include 'parts/header.html.twig' %}
 
-	{% for section in sections %}
+	{% for section, data in sections %}
 	
-		{% include 'sections/' ~ section ~ '.html.twig' %}
+		{% include 'sections/' ~ section ~ '.html.twig' with { data: data } %}
 		
 	{% endfor %}
 	
