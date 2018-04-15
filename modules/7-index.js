@@ -15,7 +15,12 @@ exports.run = function( data, next ) {
 							loaded++;
 							if ( loaded == results.length ) {
 							
-								data.set_language( req.language );
+								var css = JSON.parse( JSON.stringify( data.css ) );
+								if ( req.is_admin )
+									css.push( 'admin.css' );
+								var js = JSON.parse( JSON.stringify( data.js ) );
+								if ( req.is_admin )
+									js.push( 'admin.js' );
 								
 								res.render( 'index.html.twig', {
 									'languages' : data.languages,
@@ -23,9 +28,11 @@ exports.run = function( data, next ) {
 									'settings' : data.settings.i18n[ req.language ],
 									'sections' : sections,
 									'config' : data.config,
-									'js' : data.js,
-									'css' : data.css,
+									'js' : js,
+									'css' : css,
 									'messages' : data.messages,
+									'is_admin' : req.is_admin,
+									'req' : req,
 								});
 							}
 						}

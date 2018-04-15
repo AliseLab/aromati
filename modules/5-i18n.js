@@ -60,10 +60,19 @@ exports.run = function( data, next ) {
 		});
 	};
 	
-	data.trans = ( msgid, lang ) => {
-		if ( typeof data.messages[ lang ][ msgid ] == 'undefined' )
-			return msgid;
+	data.trans = ( msgid, lang, is_admin ) => {
+		var text;
+		if ( typeof data.messages[ lang ] == 'undefined' || typeof data.messages[ lang ][ msgid ] == 'undefined' )
+			text = msgid;
 		else
-			return data.messages[ lang ][ msgid ];
+			text = data.messages[ lang ][ msgid ];
+		
+		if ( is_admin )
+			text = '!@#' + JSON.stringify({
+				tool: 'translate',
+				msgid: msgid,
+				text: text,
+			});
+		return text;
 	}
 }

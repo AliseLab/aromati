@@ -13,23 +13,23 @@
 						lang== language %} class="active"{% endif %}>{{ label }}</a> {%
 					endfor %}
 				</div>
-				<a class="navbar-brand" href="#">{{ trans( 'site_brand' ) }}</a>
+				<a class="navbar-brand" href="#">{{ trans( req, 'site_brand' ) }}</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav pull-right">
-					<li><a href="#home">{{ trans( 'menu_home' ) }}</a></li>
+					<li><a href="#home">{{ trans( req, 'menu_home' ) }}</a></li>
 					{% for section, data in sections %}
 						{% if data.show_in_menu %}
-							<li><a href="#{{ section }}">{{ trans( 'menu_' ~ section ) }}</a></li>
+							<li><a href="#{{ section }}">{{ trans( req, 'menu_' ~ section ) }}</a></li>
 						{% endif %}
 					{% endfor %}
 				</ul>
 			</div>
 		</nav>
 		<div class="header__content text-center">
-			<h1 class="header__content__title">{{ trans( 'site_title' ) }}</h1>
-			<p class="header__content__paragraph">{{ trans( 'site_description' ) }}</p>
-			<a class="button button--margin-right button--hover" href="#">{{ trans( 'learn_more' ) }}</a> <a class="button button--hover" href="#">{{ trans( 'purchase' ) }}</a>
+			<h1 class="header__content__title">{{ trans( req, 'site_title' ) }}</h1>
+			<p class="header__content__paragraph">{{ trans( req, 'site_description' ) }}</p>
+			<a class="button button--margin-right button--hover" href="#">{{ trans( req, 'learn_more' ) }}</a> <a class="button button--hover" href="#">{{ trans( req, 'purchase' ) }}</a>
 		</div>
 	</div>
 </header>

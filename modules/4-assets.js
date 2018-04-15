@@ -4,14 +4,8 @@ exports.run = function( data, next ) {
 	if ( data.config.debug )
 		data.twig.cache( false );
 
-	var language = '';
-	
-	data.set_language = lang => {
-		language = lang;
-	}
-	
-	data.twig.extendFunction( 'trans', ( msgid ) => {
-		return data.trans( msgid, lang );
+	data.twig.extendFunction( 'trans', ( req, msgid ) => {
+		return data.trans( msgid, req.language, req.is_admin );
 	});
 	
 	if ( !data.config.debug ) {

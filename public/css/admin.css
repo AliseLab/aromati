@@ -1,0 +1,75 @@
+.admin-panel {
+	position: fixed;
+	background: #fee;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	border-bottom: 1px solid maroon;
+}
+
+.admin-panel > .label {
+	font-weight: bold;
+	color: red;
+	font-size: 1.3em;
+	margin: 0.35em 0;
+	float: left;
+}
+
+.admin-panel > .tools {
+	margin-top: 0.5em;
+}
+
+.admin-panel > .tools > span {
+	cursor: pointer;
+	display: inline-block;
+	background: #eee;
+	color: gray;
+	border: 1px solid gray;
+	padding: 0 0.4em;
+}
+
+.admin-panel > .tools > span:hover,
+.admin-panel > .tools > span.active {
+	background: white;
+	color: black;
+	border: 1px solid black;
+}
+
+.admin-panel > .tools > span.active {
+	font-weight: Bold;
+	outline: 1px solid gray;
+}
+
+.admin-panel > .tools2 {
+	margin-top: 0.2em;
+	float: right;
+}
+
+.admin-panel > .tools2 > * {
+	font-weight: bold;
+	font-size: 1.2em;
+	cursor: pointer;
+	margin-right: 1em;
+}
+
+.admin-panel > .tools2 > *:hover {
+	text-decoration: underline;
+}
+
+.admin-panel > .tools2 > .save {
+	color: #0c0;
+}
+
+.admin-panel > .tools2 > .logout {
+	color: red;
+}
+
+.admin-panel > .tools2 > .disabled {
+	color: silver;
+	cursor: default;
+}
+
+.admin-panel > .tools2 > .disabled:hover {
+	text-decoration: none;
+}

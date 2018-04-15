@@ -15,9 +15,9 @@
   
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ trans( 'site_title' ) }}</title>
-  <meta name="keywords" content="{{ trans( 'site_keywords' ) }}">
-  <meta name="description" content="{{ trans( 'site_description' ) }}">
+  <title>{{ trans( req, 'site_title' ) }}</title>
+  <meta name="keywords" content="{{ trans( req, 'site_keywords' ) }}">
+  <meta name="description" content="{{ trans( req, 'site_description' ) }}">
   
 	{% for file in css %}
     	<link rel="stylesheet" href="css/{{ file }}">
@@ -29,6 +29,11 @@
 	{% block content %}
 	{% endblock %}
 	
+	<script>
+		var global = {
+			language: '{{ language }}',
+		};
+	</script>
 	{% for file in js %}
 		<script src="js/{{ file }}"></script>
 	{% endfor %}
