@@ -1,37 +1,35 @@
+<a id="home"></a>
 <header class="header header--bg">
 	<div class="container">
 		<nav class="navbar">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#myNavbar">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
 				</button>
 				<div class="languages">
-					{% for lang, label in languages %}
-						<a href="/{{ lang }}"{% if lang == language %} class="active"{% endif %}>{{ label }}</a>
-					{% endfor %}
+					{% for lang, label in languages %} <a href="/{{ lang }}" {% if
+						lang== language %} class="active"{% endif %}>{{ label }}</a> {%
+					endfor %}
 				</div>
-				<a class="navbar-brand" href="#">DART AGENCY</a>
+				<a class="navbar-brand" href="#">{{ trans( 'site_brand' ) }}</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav pull-right">
-					<li><a href="#">HOME</a></li>
-					<li><a href="#">SERVICES</a></li>
-					<li><a href="#">FEATURES</a></li>
-					<li><a href="#">PORTFOLIO</a></li>
-					<li><a href="#">BLOG</a></li>
-					<li><a href="#">CONTACT</a></li>
+					<li><a href="#home">{{ trans( 'menu_home' ) }}</a></li>
+					{% for section, data in sections %}
+						{% if data.show_in_menu %}
+							<li><a href="#{{ section }}">{{ trans( 'menu_' ~ section ) }}</a></li>
+						{% endif %}
+					{% endfor %}
 				</ul>
 			</div>
 		</nav>
 		<div class="header__content text-center">
-			<h1 class="header__content__title">CREATIVE AGENCY</h1>
-			<p class="header__content__paragraph">Lorem ipsum dolor sit amet,
-				consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-				labore et dolore magna</p>
-			<a class="button button--margin-right button--hover" href="#">LARN
-				MORE</a> <a class="button button--hover" href="#">PURCHASE</a>
+			<h1 class="header__content__title">{{ trans( 'site_title' ) }}</h1>
+			<p class="header__content__paragraph">{{ trans( 'site_description' ) }}</p>
+			<a class="button button--margin-right button--hover" href="#">{{ trans( 'learn_more' ) }}</a> <a class="button button--hover" href="#">{{ trans( 'purchase' ) }}</a>
 		</div>
 	</div>
 </header>

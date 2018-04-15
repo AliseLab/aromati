@@ -1,26 +1,19 @@
 exports.run = function( data, next ) {
 
-	var sectiondir = './modules/sections';
-	data.fs.readdir( sectiondir, function( err, files ) {
-		if ( err ) {
-			console.log( err );
-			return;
-		}
-		
 		var render_func = function( req, res ) {
 			
 			data.load_languages( () => {
 				data.load_messages( () => {
-			
-					var sections = {};
 					
-					var loaded = 0;
-					files.forEach( function( file ) {
-						var module = require( '../' + sectiondir + '/' + file );
-						var done = function( viewdata ) {
-							sections[ module.view ] = viewdata ? viewdata : {};
+					data.sql.query( 'SELECT * FROM `sections` WHERE `enabled` = 1 ORDER BY `order` ASC', [], ( err, results ) => {
+					
+						var loaded = 0;
+						var sections = {};
+						
+						var done = function( sectiondata ) {
+							sections[ sectiondata.section ] = sectiondata;
 							loaded++;
-							if ( loaded == files.length ) {
+							if ( loaded == results.length ) {
 							
 								data.set_language( req.language );
 								
@@ -35,13 +28,31 @@ exports.run = function( data, next ) {
 									'messages' : data.messages,
 								});
 							}
-							
 						}
-						if ( module.prepare ) {
-							module.prepare( done );
-						}
-						else
-							return done();
+						
+						results.forEach( result => {
+							var sectiondata = result;
+							var module = null;
+							try {
+								module = require( '../modules/sections/' + result.section + '.js' );
+							} catch ( e ) {
+								if ( e.code !== 'MODULE_NOT_FOUND' )
+									throw e;
+							}
+							if ( module ) {
+								if ( module.prepare ) {
+									module.prepare( viewdata => {
+										sectiondata.data = viewdata;
+										done( sectiondata );
+									});
+								}
+								else
+									return done( sectiondata );
+							}
+							else
+								return done( sectiondata );
+						});
+						
 					});
 					
 				});
@@ -72,5 +83,4 @@ exports.run = function( data, next ) {
 		
 		next();
 					
-	});
 }

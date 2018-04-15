@@ -1,0 +1,10 @@
+{% extends 'layouts/simple.html.twig' %}
+
+{% block content %}
+
+<form action="/admin" method="post" autocomplete="off">
+	Password: <input type="password" name="password"/><br />
+	<input type="submit" value="Login"/>
+</form>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+	<meta charset="UTF-8">
+	<title>Login</title>
+  
+	{% for file in css %}
+		<link rel="stylesheet" href="css/{{ file }}">
+	{% endfor %}
+    
+</head>
+<body>
+
+	{% block content %}
+	{% endblock %}
+	
+	{% for file in js %}
+		<script src="js/{{ file }}"></script>
+	{% endfor %}
+	
+</body>
+
+</html>
