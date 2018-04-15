@@ -11,7 +11,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for table landing.settings
+-- Dumping structure for table aromati.settings
 CREATE TABLE IF NOT EXISTS `settings` (
   `key` varchar(64) NOT NULL DEFAULT '',
   `value_text` text DEFAULT NULL,
@@ -19,19 +19,16 @@ CREATE TABLE IF NOT EXISTS `settings` (
   PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table landing.settings: ~10 rows (approximately)
+-- Dumping data for table aromati.settings: ~7 rows (approximately)
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT IGNORE INTO `settings` (`key`, `value_text`, `value_trans`) VALUES
-	('default_language', 'ru', NULL),
+	('admin_password', 'kek', NULL),
+	('default_language', 'lv', NULL),
 	('email', 'email@email.com', 'settings_email'),
-	('facebook', '', NULL),
 	('ga_id', '', NULL),
-	('jivosite_id', '', NULL),
 	('mail_settings', '{"service":"gmail","auth":{"user":"youremail@gmail.com","pass":"yourpassword"},"tls":{"rejectUnauthorized":false}}', NULL),
-	('metrika_id', '', NULL),
-	('phone', '', NULL),
-	('site_title', 'Landing', NULL),
-	('vkontakte', '', NULL);
+	('phone', '+0123-345-6789', NULL),
+	('site_title', 'AROMATI', NULL);
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

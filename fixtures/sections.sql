@@ -11,32 +11,30 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for table landing.sections
+-- Dumping structure for table aromati.sections
 CREATE TABLE IF NOT EXISTS `sections` (
-  `name` varchar(32) NOT NULL,
-  `language` varchar(32) NOT NULL,
-  `order` int(4) DEFAULT NULL,
-  `special` varchar(16) DEFAULT NULL,
-  `title` text DEFAULT NULL,
-  `data` longtext DEFAULT NULL,
-  PRIMARY KEY (`name`,`language`),
+  `section` varchar(32) NOT NULL DEFAULT '',
+  `enabled` tinyint(1) unsigned DEFAULT NULL,
+  `show_in_menu` tinyint(1) unsigned DEFAULT NULL,
+  `order` int(4) unsigned DEFAULT NULL,
+  `show_in_footer` tinyint(1) unsigned DEFAULT NULL,
+  PRIMARY KEY (`section`),
   KEY `order` (`order`),
-  KEY `language` (`language`),
-  KEY `special` (`special`)
+  KEY `enabled` (`enabled`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table landing.sections: ~5 rows (approximately)
+-- Dumping data for table aromati.sections: ~7 rows (approximately)
 /*!40000 ALTER TABLE `sections` DISABLE KEYS */;
-INSERT IGNORE INTO `sections` (`name`, `language`, `order`, `special`, `title`, `data`) VALUES
-	('about_us', 'en', 1, NULL, 'About Us', '<h1>About Us</h1><p>sjdfghsdgfhsdgvhgvhxcgvhxcgvsdv</p>'),
-	('about_us', 'ru', 1, NULL, 'О нас', '<h1>О нас</h1><p>фыаиыпыапываырвпырваырпва</p>'),
-	('footer', 'en', NULL, 'footer', NULL, 'All rights reserved.'),
-	('footer', 'ru', NULL, 'footer', NULL, 'Все права подтверждены.'),
-	('home', 'en', NULL, 'home', NULL, '<h1>HOME</h1>'),
-	('mail_error', 'ru', NULL, 'mail_error', NULL, 'Произошла ошибка отправки заказа. Пожалуйста, напишите нам на'),
-	('mail_success', 'ru', NULL, 'mail_success', NULL, 'Ваш заказ успешно отправлено, мы с Вами свяжемся в ближайшее время'),
-	('services', 'en', 2, NULL, 'Services', '<h1>Services</h1><ul><li>sjdfhjsdhfsd</li><li>ervfg4ygfdhgdfg</li></ul>'),
-	('services', 'ru', 2, NULL, 'Услуги', '<h1>Услуги</h1><ul><li>гнрктиапркопрп</li><li>авпрвроваоывпвпавпл</li></ul>');
+INSERT IGNORE INTO `sections` (`section`, `enabled`, `show_in_menu`, `order`, `show_in_footer`) VALUES
+	('about', 1, 1, 4, 1),
+	('contact', 1, 1, 3, 1),
+	('contact2', 1, 0, 9, 0),
+	('letsgo', 1, 0, 5, 0),
+	('overview', 1, 0, 10, 0),
+	('price', 1, 1, 8, 1),
+	('project', 1, 0, 6, 0),
+	('service', 1, 1, 2, 1),
+	('team', 1, 0, 7, 0);
 /*!40000 ALTER TABLE `sections` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

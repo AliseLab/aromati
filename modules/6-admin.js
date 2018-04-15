@@ -14,7 +14,7 @@ exports.run = function( data, next ) {
 			( req.connection.remoteAddress == admin_ip )
 		);
 		
-		req.is_admin = true; // tmp
+		//req.is_admin = true; // tmp
 		
 		next();
 	}

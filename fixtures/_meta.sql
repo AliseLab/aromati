@@ -11,12 +11,12 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for table landing._meta
+-- Dumping structure for table aromati._meta
 CREATE TABLE IF NOT EXISTS `_meta` (
   `db_version` varchar(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table landing._meta: ~0 rows (approximately)
+-- Dumping data for table aromati._meta: ~0 rows (approximately)
 /*!40000 ALTER TABLE `_meta` DISABLE KEYS */;
 INSERT IGNORE INTO `_meta` (`db_version`) VALUES
 	('1.0.0');

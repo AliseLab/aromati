@@ -11,7 +11,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for table landing.languages
+-- Dumping structure for table aromati.languages
 CREATE TABLE IF NOT EXISTS `languages` (
   `name` varchar(2) NOT NULL,
   `label` text NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `languages` (
   KEY `order` (`order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table landing.languages: ~3 rows (approximately)
+-- Dumping data for table aromati.languages: ~3 rows (approximately)
 /*!40000 ALTER TABLE `languages` DISABLE KEYS */;
 INSERT IGNORE INTO `languages` (`name`, `label`, `order`) VALUES
 	('en', 'En', 1),
