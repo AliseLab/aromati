@@ -22,23 +22,78 @@ $( document ).ready( function() {
 			init: function( el, data ) {
 				el
 					.on( 'blur keyup paste input', function() {
-						set_unsaved( el )
+						if ( $(this).hasClass( 'active' ) ) {
+							set_unsaved( el );
+						}
 					})
-					.html( data.text )
 				;
+				var datatype = el.attr( 'data-type' );
+				switch ( datatype ) {
+					case 'html': {
+						el.html( data.text );
+						break;
+					}
+					case 'placeholder': {
+						el.attr( 'placeholder', data.text );
+						break;
+					}
+					default: {
+						console.log( datatype + '???' );
+					}
+				}
 			},
 			enable: function( el, data ) {
-				el
-					.attr( 'contenteditable', true )
-				;
+				var datatype = el.attr( 'data-type' );
+				switch ( datatype ) {
+					case 'html': {
+						el.attr( 'contenteditable', true );
+						break;
+					}
+					case 'placeholder': {
+						el.val( el.attr( 'placeholder' ) );
+						break;
+					}
+					default: {
+						console.log( datatype + '???' );
+					}
+				}
 			},
 			disable: function( el, data ) {
-				el
-					.attr( 'contenteditable', false )
-				;
+				var datatype = el.attr( 'data-type' );
+				switch ( datatype ) {
+					case 'html': {
+						el.attr( 'contenteditable', false );
+						break;
+					}
+					case 'placeholder': {
+						el.attr( 'placeholder', el.val() );
+						el.val( '' );
+						break;
+					}
+					default: {
+						console.log( datatype + '???' );
+					}
+				}
 			},
 			save: function( el, data ) {
-				data.text = el.html();
+				var datatype = el.attr( 'data-type' );
+				switch ( datatype ) {
+					case 'html': {
+						data.text = el.html();
+						break;
+					}
+					case 'placeholder': {
+						if ( el.hasClass( 'active' ) )
+							data.text = el.val();
+						else
+							data.text = el.attr( 'placeholder' );
+						break;
+					}
+					default: {
+						console.log( datatype + '???' );
+					}
+				}
+				
 			},
 		},
 	
@@ -104,18 +159,24 @@ $( document ).ready( function() {
 	
 	// search and init tools
 	$( '*' ).each( function() {
-		var html = $(this).html();
-		if ( html ) {
-			if ( html.indexOf( '!@#' ) === 0 ) {
-				var data = JSON.parse( html.substring( 3 ) );
-				$(this)
+		var el = $(this);
+		var trysource = function( source, type ) {
+			if ( source && source.indexOf( '!@#' ) === 0 ) {
+				var data = JSON.parse( source.substring( 3 ) );
+				el
 					.addClass( 'editable' )
 					.addClass( data.tool )
-					.attr( 'data-data', html.substring( 3 ) )
+					.attr( 'data-type', type )
+					.attr( 'data-data', source.substring( 3 ) )
 				;
-				tools[ data.tool ].init( $(this), data );
+				tools[ data.tool ].init( el, data );
+				return true;
 			}
+			return false;
 		}
+		
+		trysource( el.html(), 'html' ) ||
+		trysource( el.attr( 'placeholder' ), 'placeholder' );
 	});
 	
 	// translate

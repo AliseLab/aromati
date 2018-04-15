@@ -60,6 +60,16 @@ exports.run = function( data, next ) {
 		});
 	};
 	
+	function escapeHtml( unsafe ) {
+		return unsafe
+			.replace( /&/g, "&amp;" )
+			.replace( /</g, "&lt;" )
+			.replace( />/g, "&gt;" )
+			.replace( /"/g, "&quot;" )
+			.replace( /'/g, "&#039;" )
+		;
+	}
+	
 	data.trans = ( msgid, lang, is_admin ) => {
 		var text;
 		if ( typeof data.messages[ lang ] == 'undefined' || typeof data.messages[ lang ][ msgid ] == 'undefined' )
@@ -68,11 +78,11 @@ exports.run = function( data, next ) {
 			text = data.messages[ lang ][ msgid ];
 		
 		if ( is_admin )
-			text = '!@#' + JSON.stringify({
+			text = '!@#' + escapeHtml( JSON.stringify({
 				tool: 'translate',
 				msgid: msgid,
 				text: text,
-			});
+			}));
 		return text;
 	}
 }

@@ -10,7 +10,8 @@
 	{% include 'parts/header.html.twig' %}
 
 	{% for section, data in sections %}
-	
+		
+		<a id="{{ section }}"></a>
 		{% include 'sections/' ~ section ~ '.html.twig' with { data: data } %}
 		
 	{% endfor %}
