@@ -3,12 +3,9 @@
 		<div class="page-section">
 			<div class="overview__wrapper text-center">
 				<ul>
-					{% for i in 1..4 %}
-						<li>
-							<h1 class="overview__number">{{ trans( req, 'overview_'~i~'_num' ) }}</h1>
-							<p class="overview__title">{{ trans( req, 'overview_'~i~'_text' ) }}</p>
-						</li>
-					{% endfor %}
+				
+					{% include '../parts/collection.html.twig' with { 'type' : 'overview', 'maxobjects' : 4 } %}
+				
 				</ul>
 			</div>
 

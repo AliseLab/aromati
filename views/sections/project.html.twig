@@ -5,26 +5,9 @@
 				<h2 class="page-section__title">{{ trans( req, 'projects_header' ) }}</h2>
 				<p class="page-section__paragraph">{{ trans( req, 'projects_text' ) }}</p>
 			</div>
-			<div class="row gutters-50">
-				{% for i in 1..6 %}
-					{% if ( i - 1 ) % 3 == 0 %}
-						</div>
-						<div class="row gutters-50">
-					{% endif %}
-					<div class="col-md-4">
-						<div class="thumbnail">
-							<a href="img/featured-project-pic1.png" target="_blank">
-								<img class="img-responsive"
-								src="img/featured-project-pic1.png" alt="">
-								<div class="caption">
-									<h4 class="project__title">{{ trans( req, 'project_'~i~'_header' ) }}</h4>
-									<p class="project__paragraph">{{ trans( req, 'project_'~i~'_text' ) }}</p>
-								</div>
-							</a>
-						</div>
-					</div>
-				{% endfor %}
-			</div>
+			
+			{% include '../parts/collection.html.twig' with { 'type' : 'project', 'rowclass' : 'gutters-50', 'rowobjects' : 3 } %}
+			
 		</div>
 	</section>
 </div>

@@ -79,7 +79,7 @@ exports.run = function( data, next ) {
 		
 		if ( is_admin )
 			text = '!@#' + escapeHtml( JSON.stringify({
-				tool: 'translate',
+				tool: 'pageedit',
 				msgid: msgid,
 				text: text,
 			}));

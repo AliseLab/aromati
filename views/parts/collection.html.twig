@@ -1,0 +1,16 @@
+<div class="row {{ rowclass }}">
+	{% for i, object in collections[ type ] %}
+		{% if not maxobjects or i < maxobjects %}
+		
+			{% if rowobjects %}
+				{% if i % rowobjects == 0 %}
+					</div>
+					<div class="row {{ rowclass }}">
+				{% endif %}
+			{% endif %}
+			
+			{% include '../parts/objects/' ~ type ~ '.html.twig' with { 'uid' : type ~ '_' ~ object.id } %}
+			
+		{% endif %}
+	{% endfor %}
+</div>

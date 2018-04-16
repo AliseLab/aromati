@@ -7,59 +7,82 @@ exports.run = function( data, next ) {
 					
 					data.sql.query( 'SELECT * FROM `sections` WHERE `enabled` = 1 ORDER BY `order` ASC', [], ( err, results ) => {
 					
-						var loaded = 0;
-						var sections = {};
-						
-						var done = function( sectiondata ) {
-							sections[ sectiondata.section ] = sectiondata;
-							loaded++;
-							if ( loaded == results.length ) {
-							
-								var css = JSON.parse( JSON.stringify( data.css ) );
-								if ( req.is_admin )
-									css.push( 'admin.css' );
-								var js = JSON.parse( JSON.stringify( data.js ) );
-								if ( req.is_admin )
-									js.push( 'admin.js' );
-								
-								res.render( 'index.html.twig', {
-									'languages' : data.languages,
-									'language' : req.language,
-									'settings' : data.settings.i18n[ req.language ],
-									'sections' : sections,
-									'config' : data.config,
-									'js' : js,
-									'css' : css,
-									'messages' : data.messages,
-									'is_admin' : req.is_admin,
-									'req' : req,
-								});
-							}
+						if ( err ) {
+							console.log( err );
+							res.end( '' );
 						}
+						else {
 						
-						results.forEach( result => {
-							var sectiondata = result;
-							var module = null;
-							try {
-								module = require( '../modules/sections/' + result.section + '.js' );
-							} catch ( e ) {
-								if ( e.code !== 'MODULE_NOT_FOUND' )
-									throw e;
-							}
-							if ( module ) {
-								if ( module.prepare ) {
-									module.prepare( viewdata => {
-										sectiondata.data = viewdata;
-										done( sectiondata );
+							var loaded = 0;
+							var sections = {};
+							
+							var done = function( sectiondata ) {
+								sections[ sectiondata.section ] = sectiondata;
+								loaded++;
+								if ( loaded == results.length ) {
+								
+									data.sql.query( 'SELECT * FROM `collections` ORDER BY `order` ASC', [], ( err, results ) => {
+										if ( err ) {
+											console.log( err );
+										}
+										else {
+											
+											var collections = {};
+											
+											results.forEach( result => {
+												if ( typeof collections[ result.type ] === 'undefined' )
+													collections[ result.type ] = [];
+												collections[ result.type ].push( result );
+											});
+									
+											var css = JSON.parse( JSON.stringify( data.css ) );
+											if ( req.is_admin )
+												css.push( 'admin.css' );
+											var js = JSON.parse( JSON.stringify( data.js ) );
+											if ( req.is_admin )
+												js.push( 'admin.js' );
+											
+											res.render( 'index.html.twig', {
+												'languages' : data.languages,
+												'language' : req.language,
+												'settings' : data.settings.i18n[ req.language ],
+												'sections' : sections,
+												'config' : data.config,
+												'js' : js,
+												'css' : css,
+												'messages' : data.messages,
+												'is_admin' : req.is_admin,
+												'req' : req,
+												'collections' : collections,
+											});
+										}
 									});
+								}
+							}
+							
+							results.forEach( result => {
+								var sectiondata = result;
+								var module = null;
+								try {
+									module = require( '../modules/sections/' + result.section + '.js' );
+								} catch ( e ) {
+									if ( e.code !== 'MODULE_NOT_FOUND' )
+										throw e;
+								}
+								if ( module ) {
+									if ( module.prepare ) {
+										module.prepare( viewdata => {
+											sectiondata.data = viewdata;
+											done( sectiondata );
+										});
+									}
+									else
+										return done( sectiondata );
 								}
 								else
 									return done( sectiondata );
-							}
-							else
-								return done( sectiondata );
-						});
-						
+							});
+						}
 					});
 					
 				});

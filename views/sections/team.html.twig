@@ -3,21 +3,9 @@
 		<div class="page-section text-center">
 			<h2 class="page-section__title">{{ trans( req, 'team_header') }}</h2>
 			<p class="page-section__paragraph">{{ trans( req, 'team_text') }}</p>
-			<div class="row gutters-50">
-				{% for i in 1..4 %}
-					<div class="col-md-6 col-lg-3">
-						<div class="thumbnail">
-							<a href="img/team-pic1.png" target="_blank"> <img
-								src="img/team-pic1.png" alt="">
-								<div class="caption team__caption">
-									<h4 class="team__name">{{ trans( req, 'team_'~i~'_name' ) }}</h4>
-									<p class="team__title">{{ trans( req, 'team_'~i~'_role' ) }}</p>
-								</div>
-							</a>
-						</div>
-					</div>
-				{% endfor %}
-			</div>
+			
+			{% include '../parts/collection.html.twig' with { 'type' : 'team', 'rowclass' : 'gutters-50', 'rowobjects' : 4 } %}
+			
 		</div>
 	</section>
 </div>

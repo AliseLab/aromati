@@ -14,7 +14,7 @@ $( document ).ready( function() {
 	
 	var tools = {
 			
-		translate: {
+		pageedit: {
 
 			construct: function() {
 				
@@ -178,15 +178,5 @@ $( document ).ready( function() {
 		trysource( el.html(), 'html' ) ||
 		trysource( el.attr( 'placeholder' ), 'placeholder' );
 	});
-	
-	// translate
-	/*$( '.editable' ).on( 'click', function( e ) {
-		if ( $(this).hasClass( 'active' ) ) {
-			var data = JSON.parse( $(this).attr( 'data-data' ) );
-			tools[ data.tool ].edit( $(this), data );
-			return false;
-		}
-	});*/
-	
 	
 });

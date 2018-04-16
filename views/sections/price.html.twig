@@ -4,26 +4,9 @@
 			<h2 class="page-section__title">{{ trans( req, 'pricing_header' ) }}</h2>
 			<p class="page-section__paragraph">{{ trans( req, 'pricing_text' ) }}</p>
 			<div class="price__panel-wrapper">
-				<div class="row gutters-50">
-					{% for i in 1..3 %}
-						<div class="col-md-4">
-							<div class="panel text-center">
-								<div class="panel-heading">
-									<h4 class="price__title">{{ trans( req, 'pricing_'~i~'_header' ) }}</h4>
-									<h1 class="price__ammount">
-										&#36;<span class="price__ammount--number">{{ trans( req, 'pricing_'~i~'_amount' ) }}</span> &#47;<span>{{ trans( req, 'pricing_'~i~'_per' ) }}</span>
-									</h1>
-								</div>
-								<div class="panel-body">
-									<p>{{ trans( req, 'pricing_'~i~'_text' ) }}</p>
-								</div>
-								<div>
-									<a class="panel__button" href="#">{{ trans( req, 'get_this_plan' ) }}</a>
-								</div>
-							</div>
-						</div>
-					{% endfor %}
-				</div>
+			
+				{% include '../parts/collection.html.twig' with { 'type' : 'price', 'rowclass' : 'gutters-50', 'rowobjects' : 3 } %}
+			
 			</div>
 		</div>
 	</section>
