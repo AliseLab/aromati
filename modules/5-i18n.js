@@ -60,7 +60,7 @@ exports.run = function( data, next ) {
 		});
 	};
 	
-	data.twig.extendFunction( 'trans', ( req, msgid ) => {
+	data.twig.extendFunction( 'trans', ( req, msgid, objectuid ) => {
 		
 		var lang = req.language;
 		
@@ -70,11 +70,24 @@ exports.run = function( data, next ) {
 		else
 			text = data.messages[ lang ][ msgid ];
 		
-		if ( req.is_admin )
-			text = data.makeeditable({
+		if ( req.is_admin ) {
+			var dt = {
 				msgid: msgid,
 				text: text,
-			});
+			};
+			if ( objectuid ) {
+				var pos = objectuid.indexOf( '_' );
+				if ( pos >= 0 ) {
+					var type = objectuid.substring( 0, pos );
+					var id = objectuid.substring( pos + 1 );
+					if ( type && id ) {
+						dt.object_type = type;
+						dt.object_id = id;
+					}
+				}
+			}
+			text = data.makeeditable( dt );
+		}
 		return text;
 		
 	});

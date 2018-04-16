@@ -88,6 +88,7 @@
 	padding: 0 0.4em;
 	cursor: pointer;
 	opacity: 0.5;
+	font-weight: bold;
 }
 
 .admin-panel .controls > * > *:hover {
@@ -95,11 +96,15 @@
 	background: white;
 }
 
+.admin-panel .controls > .collection > .add {
+	color: green;
+}
+
 .admin-panel .controls > .collection > .delete {
 	color: red;
-	font-weight: bold;
 }
 
 .collection .objecttemplate {
 	display: none;
+	opacity: 0.5;
 }

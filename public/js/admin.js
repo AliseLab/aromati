@@ -20,6 +20,14 @@ $( document ).ready( function() {
 			collection_current_collection : null,
 			collection_current_object : null,
 			collection_mouseover : function( that, el, e ) {
+				if ( el.hasClass( 'objecttemplate' ) ) {
+					that.collection_control.find( '.add' ).show();
+					that.collection_control.find( '.delete' ).hide();
+				}
+				else {
+					that.collection_control.find( '.delete' ).show();
+					that.collection_control.find( '.add' ).hide();
+				}
 				that.collection_control
 					.css({
 						top: el.offset().top + 'px',
@@ -37,6 +45,8 @@ $( document ).ready( function() {
 					if (
 						target.hasClass( 'object' ) ||
 						target.closest( '.object' ).length > 0 ||
+						target.hasClass( 'objecttemplate' ) ||
+						target.closest( '.objecttemplate' ).length > 0 ||
 						target.closest( '.controls' ).length > 0
 					)
 						return;
@@ -53,6 +63,46 @@ $( document ).ready( function() {
 				var that = this;
 				this.collection_control.on( 'mouseout', function( e ) {
 					that.collection_mouseout( that, $(this), e );
+				});
+				
+				this.collection_control.find( '> .add' ).on( 'click', function() {
+					if ( that.collection_current_object ) {
+						
+						// find free id
+						var ids = [];
+						that.collection_current_collection.find( '.object' ).each( function() {
+							ids.push( +$(this).attr( 'data-id' ) );
+						});
+						
+						var id = 1;
+						while ( ids.indexOf( id ) >= 0 )
+							id++;
+						
+						var objectuid = that.collection_current_collection.attr( 'data-collectiontype' ) + '_' + id;
+						var object = that.collection_current_object
+							.clone()
+							.removeClass( 'objecttemplate' )
+							.addClass( 'object' )
+							.attr( 'data-id', id )
+						;
+						
+						var templateuid = 'TEMPLATE';
+						object.find( '.editable[data-type="html"]' ).each( function() {
+							var data = JSON.parse( $(this).attr( 'data-data' ) );
+							data.msgid = data.msgid.replace( templateuid, objectuid );
+							data.text = data.msgid;
+							$(this)
+								.html( data.text )
+								.attr( 'data-data', JSON.stringify( data ) )
+							;
+							that.init( $(this), data );
+							that.enable( $(this), data );
+						});
+						
+						set_unsaved( that.collection_current_collection );
+						object.insertBefore( that.collection_current_object );
+						that.collection_control.hide();
+					}
 				});
 				
 				this.collection_control.find( '> .delete' ).on( 'click', function() {
@@ -95,7 +145,8 @@ $( document ).ready( function() {
 				var datatype = el.attr( 'data-type' );
 				switch ( datatype ) {
 					case 'html': {
-						el.attr( 'contenteditable', true );
+						if ( el.closest( '.objecttemplate' ).length == 0 )
+							el.attr( 'contenteditable', true );
 						break;
 					}
 					case 'placeholder': {
@@ -104,12 +155,17 @@ $( document ).ready( function() {
 					}
 					case 'collection': {
 						var that = this;
-						el.on( 'mouseover', '.object', function( e ) {
+						el.on( 'mouseover', '.object,.objecttemplate', function( e ) {
 							that.collection_mouseover( that, $(this), e );
 						});
-						el.on( 'mouseout', '.object', function( e ) {
+						el.on( 'mouseout', '.object,.objecttemplate', function( e ) {
 							that.collection_mouseout( that, $(this), e );
 						});
+						var template = el.find( '.objecttemplate' );
+						if ( template.prop( 'tagName' ) == 'LI' )
+							template.css( 'display', 'inline-block' );
+						else
+							template.show();
 						break;
 					}
 					default: {
@@ -121,7 +177,8 @@ $( document ).ready( function() {
 				var datatype = el.attr( 'data-type' );
 				switch ( datatype ) {
 					case 'html': {
-						el.attr( 'contenteditable', false );
+						if ( el.closest( '.objecttemplate' ).length == 0 )
+							el.attr( 'contenteditable', false );
 						break;
 					}
 					case 'placeholder': {
@@ -130,8 +187,9 @@ $( document ).ready( function() {
 						break;
 					}
 					case 'collection': {
-						el.off( 'mouseover', '.object' );
-						el.off( 'mouseout', '.object' );
+						el.find( '.objecttemplate' ).hide();
+						el.off( 'mouseover', '.object,.objecttemplate' );
+						el.off( 'mouseout', '.object,.objecttemplate' );
 						break;
 					}
 					default: {
@@ -187,7 +245,6 @@ $( document ).ready( function() {
 			$.post( '/admin/save', {
 				data: JSON.stringify( request ),
 			}, function( ret ) {
-				console.log( ret );
 				savebtn.addClass( 'disabled' );
 			})
 		}
@@ -232,16 +289,26 @@ $( document ).ready( function() {
 	$( '*' ).each( function() {
 		var el = $(this);
 		var trysource = function( source, type ) {
-			if ( source && source.indexOf( '!@#' ) === 0 ) {
-				var data = JSON.parse( source.substring( 3 ) );
-				el
-					.addClass( 'editable' )
-					.addClass( data.tool )
-					.attr( 'data-type', type )
-					.attr( 'data-data', source.substring( 3 ) )
-				;
-				tools[ data.tool ].init( el, data );
-				return true;
+			if ( source ) {
+				var pos = source.indexOf( '!@#' );
+				var badpos1 = source.indexOf( '<' );
+				var badpos2 = source.indexOf( '>' );
+				if (
+					pos >= 0 &&
+					( badpos1 < 0 || pos < badpos1 ) &&
+					( badpos2 < 0 || pos < badpos2 )
+				) {
+					var rawdata = source.substring( pos + 3 );
+					var data = JSON.parse( rawdata );
+					el
+						.addClass( 'editable' )
+						.addClass( data.tool )
+						.attr( 'data-type', type )
+						.attr( 'data-data', rawdata )
+					;
+					tools[ data.tool ].init( el, data );
+					return true;
+				}
 			}
 			return false;
 		}

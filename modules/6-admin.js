@@ -14,7 +14,7 @@ exports.run = function( data, next ) {
 			( req.connection.remoteAddress == admin_ip )
 		);
 		
-		req.is_admin = true; // tmp
+		//req.is_admin = true; // tmp
 		
 		next();
 	}
@@ -37,14 +37,24 @@ exports.run = function( data, next ) {
 		pageedit: {
 			
 			save: ( what, next ) => {
-				
 				if ( what.msgid ) { // translation
-					data.sql.query( 'INSERT INTO `trans` ( `id`, `language`, `text` ) VALUES ( ?, ?, ? ) ON DUPLICATE KEY UPDATE `text` = ?', [
+					var keystr = '`id`, `language`, `text`';
+					var valstr = '?, ?, ?';
+					var args = [
 						what.msgid,
 						what.request.language,
 						what.text,
-						what.text,
-					], function( err ) {
+					];
+					if ( what.object_type && what.object_id ) {
+						keystr += ', `object_type`, `object_id`';
+						valstr += ', ?, ?';
+						args.push( what.object_type );
+						args.push( what.object_id );
+					}
+					
+					args.push( what.text );
+					
+					data.sql.query( 'INSERT INTO `trans` ( ' + keystr + ' ) VALUES ( ' + valstr + ' ) ON DUPLICATE KEY UPDATE `text` = ?', args, function( err ) {
 						if ( err )
 							console.log( err );
 						else {
@@ -82,24 +92,27 @@ exports.run = function( data, next ) {
 						});
 					});
 					
-					var i = 0;
-					var done = () => {
-						i++;
-						if ( i == queries.length ) {
-							console.log( 'done' );
-							next();
-						}
-					}
-					
-					queries.forEach( query => {
-						data.sql.query( query.sql, query.args, ( err, results ) => {
-							if ( err ) {
-								console.log( err );
+					if ( queries.length > 0 ) {
+						var i = 0;
+						var done = () => {
+							i++;
+							if ( i == queries.length ) {
+								next();
 							}
-							else
-								done();
-						})
-					});
+						}
+	
+						queries.forEach( query => {
+							data.sql.query( query.sql, query.args, ( err, results ) => {
+								if ( err ) {
+									console.log( err );
+								}
+								else
+									done();
+							})
+						});
+					}
+					else
+						next();
 				}
 				else {
 					console.log( '???', what );
@@ -161,6 +174,13 @@ exports.run = function( data, next ) {
 		res.redirect( '/' );
 	});
 	
+	function escapeQuotes( unsafe ) {
+		return unsafe
+			.replace( /"/g, "&quot;" )
+			.replace( /'/g, "&#039;" )
+		;
+	}
+	
 	function escapeHtml( unsafe ) {
 		return unsafe
 			.replace( /&/g, "&amp;" )
@@ -173,7 +193,7 @@ exports.run = function( data, next ) {
 	
 	data.makeeditable = function( data ) {
 		data.tool = 'pageedit';
-		return '!@#' + escapeHtml( JSON.stringify( data ) );
+		return '!@#' + escapeQuotes( JSON.stringify( data ) );
 	}
 	
 	data.twig.extendFunction( 'collection', ( req, objects, type ) => {
@@ -187,7 +207,7 @@ exports.run = function( data, next ) {
 			data.ids = [];
 			for ( var i in objects )
 				data.ids.push( objects[ i ].id );
-			return ' data-collection="!@#' + escapeHtml( JSON.stringify( data ) ) + '" ';
+			return ' data-collectiontype="' + type + '" data-collection="!@#' + escapeHtml( JSON.stringify( data ) ) + '" ';
 		}
 		return '';
 	});

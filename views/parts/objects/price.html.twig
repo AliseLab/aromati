@@ -1,16 +1,16 @@
 <div class="col-md-4 {{ cls }}" data-id="{{ id }}">
 	<div class="panel text-center">
 		<div class="panel-heading">
-			<h4 class="price__title">{{ trans( req, uid ~ '_header' ) }}</h4>
+			<h4 class="price__title">{{ trans( req, uid ~ '_header', uid ) }}</h4>
 			<h1 class="price__ammount">
-				&#36;<span class="price__ammount--number">{{ trans( req, uid ~ '_amount' ) }}</span> &#47;<span>{{ trans( req, uid ~ '_per' ) }}</span>
+				&#36;<span class="price__ammount--number">{{ trans( req, uid ~ '_amount', uid ) }}</span> &#47;<span>{{ trans( req, uid ~ '_per', uid ) }}</span>
 			</h1>
 		</div>
 		<div class="panel-body">
-			<p>{{ trans( req, uid ~ '_text' ) }}</p>
+			<p>{{ trans( req, uid ~ '_text', uid ) }}</p>
 		</div>
 		<div>
-			<a class="panel__button" href="#">{{ trans( req, 'get_this_plan' ) }}</a>
+			<a class="panel__button" href="#">{{ trans( req, 'get_this_plan', uid ) }}</a>
 		</div>
 	</div>
 </div>

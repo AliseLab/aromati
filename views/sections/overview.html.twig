@@ -2,11 +2,9 @@
 	<div class="container">
 		<div class="page-section">
 			<div class="overview__wrapper text-center">
-				<ul>
+			
+				{% include '../parts/collection.html.twig' with { 'type' : 'overview', 'maxobjects' : 4, 'norow' : true, 'custom_tag' : 'ul' } %}
 				
-					{% include '../parts/collection.html.twig' with { 'type' : 'overview', 'maxobjects' : 4 } %}
-				
-				</ul>
 			</div>
 
 		</div>

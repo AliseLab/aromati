@@ -1,12 +1,15 @@
-<div {{ collection( req, collections[ type ], type ) }} class="collection">
-	<div class="row {{ rowclass }}">
-		{% if is_admin %}
-			{% include '../parts/objects/' ~ type ~ '.html.twig' with { 'cls' : 'objecttemplate' } %}
-		{% endif %}
+{% if not custom_tag %}
+	{% set custom_tag = 'div' %}
+{% endif %}
+
+<{{ custom_tag }} {{ collection( req, collections[ type ], type ) }} class="collection">
+	{% if not norow %}
+		<div class="row {{ rowclass }}">
+	{% endif %}
 		{% for i, object in collections[ type ] %}
 			{% if not maxobjects or i < maxobjects %}
 			
-				{% if rowobjects %}
+				{% if false and rowobjects %}
 					{% if i % rowobjects == 0 %}
 						</div>
 						<div class="row {{ rowclass }}">
@@ -17,5 +20,10 @@
 				
 			{% endif %}
 		{% endfor %}
-	</div>
-</div>
+		{% if is_admin %}
+			{% include '../parts/objects/' ~ type ~ '.html.twig' with { 'cls' : 'objecttemplate', 'uid' : 'TEMPLATE' } %}
+		{% endif %}
+	{% if not norow %}
+		</div>
+	{% endif %}
+</{{ custom_tag }}>
