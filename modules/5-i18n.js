@@ -60,29 +60,23 @@ exports.run = function( data, next ) {
 		});
 	};
 	
-	function escapeHtml( unsafe ) {
-		return unsafe
-			.replace( /&/g, "&amp;" )
-			.replace( /</g, "&lt;" )
-			.replace( />/g, "&gt;" )
-			.replace( /"/g, "&quot;" )
-			.replace( /'/g, "&#039;" )
-		;
-	}
-	
-	data.trans = ( msgid, lang, is_admin ) => {
+	data.twig.extendFunction( 'trans', ( req, msgid ) => {
+		
+		var lang = req.language;
+		
 		var text;
 		if ( typeof data.messages[ lang ] == 'undefined' || typeof data.messages[ lang ][ msgid ] == 'undefined' )
 			text = msgid;
 		else
 			text = data.messages[ lang ][ msgid ];
 		
-		if ( is_admin )
-			text = '!@#' + escapeHtml( JSON.stringify({
-				tool: 'pageedit',
+		if ( req.is_admin )
+			text = data.makeeditable({
 				msgid: msgid,
 				text: text,
-			}));
+			});
 		return text;
-	}
+		
+	});
+
 }

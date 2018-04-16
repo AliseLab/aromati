@@ -16,7 +16,52 @@ $( document ).ready( function() {
 			
 		pageedit: {
 
+			collection_control : null,
+			collection_current_collection : null,
+			collection_current_object : null,
+			collection_mouseover : function( that, el, e ) {
+				that.collection_control
+					.css({
+						top: el.offset().top + 'px',
+						left: ( el.outerWidth() - that.collection_control.outerWidth() + el.offset().left ) + 'px',
+					})
+					.show()
+				;
+				that.collection_current_object = el;
+				that.collection_current_collection = el.closest( '.collection' );
+			},
+			collection_mouseout : function( that, el, e ) {
+				if ( e.relatedTarget ) {
+					var target = $( e.relatedTarget );
+					
+					if (
+						target.hasClass( 'object' ) ||
+						target.closest( '.object' ).length > 0 ||
+						target.closest( '.controls' ).length > 0
+					)
+						return;
+				}
+				that.collection_current_collection = null;
+				that.collection_current_object = null;
+				that.collection_control
+					.hide()
+				;
+			},
+			
 			construct: function() {
+				this.collection_control = $( '.admin-panel .controls .collection' );
+				var that = this;
+				this.collection_control.on( 'mouseout', function( e ) {
+					that.collection_mouseout( that, $(this), e );
+				});
+				
+				this.collection_control.find( '> .delete' ).on( 'click', function() {
+					if ( that.collection_current_object ) {
+						set_unsaved( that.collection_current_collection );
+						that.collection_current_object.remove();
+						that.collection_control.hide();
+					}
+				});
 				
 			},
 			init: function( el, data ) {
@@ -37,6 +82,10 @@ $( document ).ready( function() {
 						el.attr( 'placeholder', data.text );
 						break;
 					}
+					case 'collection': {
+						// nothing to do
+						break;
+					}
 					default: {
 						console.log( datatype + '???' );
 					}
@@ -51,6 +100,16 @@ $( document ).ready( function() {
 					}
 					case 'placeholder': {
 						el.val( el.attr( 'placeholder' ) );
+						break;
+					}
+					case 'collection': {
+						var that = this;
+						el.on( 'mouseover', '.object', function( e ) {
+							that.collection_mouseover( that, $(this), e );
+						});
+						el.on( 'mouseout', '.object', function( e ) {
+							that.collection_mouseout( that, $(this), e );
+						});
 						break;
 					}
 					default: {
@@ -70,6 +129,11 @@ $( document ).ready( function() {
 						el.val( '' );
 						break;
 					}
+					case 'collection': {
+						el.off( 'mouseover', '.object' );
+						el.off( 'mouseout', '.object' );
+						break;
+					}
 					default: {
 						console.log( datatype + '???' );
 					}
@@ -87,6 +151,13 @@ $( document ).ready( function() {
 							data.text = el.val();
 						else
 							data.text = el.attr( 'placeholder' );
+						break;
+					}
+					case 'collection': {
+						data.new_ids = [];
+						el.find( '.object' ).each( function() {
+							data.new_ids.push( +$(this).attr( 'data-id' ) );
+						});
 						break;
 					}
 					default: {
@@ -176,7 +247,8 @@ $( document ).ready( function() {
 		}
 		
 		trysource( el.html(), 'html' ) ||
-		trysource( el.attr( 'placeholder' ), 'placeholder' );
+		trysource( el.attr( 'placeholder' ), 'placeholder' ) ||
+		trysource( el.attr( 'data-collection' ), 'collection' );
 	});
 	
 });

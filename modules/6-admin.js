@@ -38,18 +38,73 @@ exports.run = function( data, next ) {
 			
 			save: ( what, next ) => {
 				
-				data.sql.query( 'INSERT INTO `trans` ( `id`, `language`, `text` ) VALUES ( ?, ?, ? ) ON DUPLICATE KEY UPDATE `text` = ?', [
-					what.msgid,
-					what.request.language,
-					what.text,
-					what.text,
-				], function( err ) {
-					if ( err )
-						console.log( err );
-					else {
-						next();
+				if ( what.msgid ) { // translation
+					data.sql.query( 'INSERT INTO `trans` ( `id`, `language`, `text` ) VALUES ( ?, ?, ? ) ON DUPLICATE KEY UPDATE `text` = ?', [
+						what.msgid,
+						what.request.language,
+						what.text,
+						what.text,
+					], function( err ) {
+						if ( err )
+							console.log( err );
+						else {
+							next();
+						}
+					});
+				}
+				else if ( what.collection ) { // collection
+					var toadd = [];
+					var toremove = [];
+					what.ids.forEach( id => {
+						if ( what.new_ids.indexOf( id ) < 0 )
+							toremove.push( id );
+					});
+					what.new_ids.forEach( id => {
+						if ( what.ids.indexOf( id ) < 0 )
+							toadd.push( id );
+					});
+					
+					var queries = [];
+					toremove.forEach( id => {
+						queries.push({
+							sql: 'DELETE FROM `trans` WHERE `object_type` = ? AND `object_id` = ?',
+							args: [ what.collection.type, id ],
+						});
+						queries.push({
+							sql: 'DELETE FROM `collections` WHERE `type` = ? AND `id` = ? LIMIT 1',
+							args: [ what.collection.type, id ],
+						});
+					});
+					toadd.forEach( id => {
+						queries.push({
+							sql: 'INSERT INTO `collections` ( `type`, `id` ) VALUES ( ?, ? )',
+							args: [ what.collection.type, id ],
+						});
+					});
+					
+					var i = 0;
+					var done = () => {
+						i++;
+						if ( i == queries.length ) {
+							console.log( 'done' );
+							next();
+						}
 					}
-				});
+					
+					queries.forEach( query => {
+						data.sql.query( query.sql, query.args, ( err, results ) => {
+							if ( err ) {
+								console.log( err );
+							}
+							else
+								done();
+						})
+					});
+				}
+				else {
+					console.log( '???', what );
+					next();
+				}
 			},
 			
 		},
@@ -106,6 +161,37 @@ exports.run = function( data, next ) {
 		res.redirect( '/' );
 	});
 	
+	function escapeHtml( unsafe ) {
+		return unsafe
+			.replace( /&/g, "&amp;" )
+			.replace( /</g, "&lt;" )
+			.replace( />/g, "&gt;" )
+			.replace( /"/g, "&quot;" )
+			.replace( /'/g, "&#039;" )
+		;
+	}
+	
+	data.makeeditable = function( data ) {
+		data.tool = 'pageedit';
+		return '!@#' + escapeHtml( JSON.stringify( data ) );
+	}
+	
+	data.twig.extendFunction( 'collection', ( req, objects, type ) => {
+		if ( req.is_admin ) {
+			var data = {
+				tool : 'pageedit',
+				collection : {
+					type : type,
+				},
+			};
+			data.ids = [];
+			for ( var i in objects )
+				data.ids.push( objects[ i ].id );
+			return ' data-collection="!@#' + escapeHtml( JSON.stringify( data ) ) + '" ';
+		}
+		return '';
+	});
+
 	next();
 	
 }

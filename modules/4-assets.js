@@ -4,10 +4,6 @@ exports.run = function( data, next ) {
 	if ( data.config.debug )
 		data.twig.cache( false );
 
-	data.twig.extendFunction( 'trans', ( req, msgid ) => {
-		return data.trans( msgid, req.language, req.is_admin );
-	});
-	
 	if ( !data.config.debug ) {
 		var Minify = require( 'express-minify-html' );
 		data.app.use( Minify( {

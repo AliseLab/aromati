@@ -1,16 +1,21 @@
-<div class="row {{ rowclass }}">
-	{% for i, object in collections[ type ] %}
-		{% if not maxobjects or i < maxobjects %}
-		
-			{% if rowobjects %}
-				{% if i % rowobjects == 0 %}
-					</div>
-					<div class="row {{ rowclass }}">
-				{% endif %}
-			{% endif %}
-			
-			{% include '../parts/objects/' ~ type ~ '.html.twig' with { 'uid' : type ~ '_' ~ object.id } %}
-			
+<div {{ collection( req, collections[ type ], type ) }} class="collection">
+	<div class="row {{ rowclass }}">
+		{% if is_admin %}
+			{% include '../parts/objects/' ~ type ~ '.html.twig' with { 'cls' : 'objecttemplate' } %}
 		{% endif %}
-	{% endfor %}
+		{% for i, object in collections[ type ] %}
+			{% if not maxobjects or i < maxobjects %}
+			
+				{% if rowobjects %}
+					{% if i % rowobjects == 0 %}
+						</div>
+						<div class="row {{ rowclass }}">
+					{% endif %}
+				{% endif %}
+				
+				{% include '../parts/objects/' ~ type ~ '.html.twig' with { 'id' : object.id, 'cls' : 'object', 'uid' : type ~ '_' ~ object.id } %}
+				
+			{% endif %}
+		{% endfor %}
+	</div>
 </div>

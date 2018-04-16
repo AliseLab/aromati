@@ -73,3 +73,33 @@
 .admin-panel > .tools2 > .disabled:hover {
 	text-decoration: none;
 }
+
+.admin-panel .controls > * {
+	display: none;
+	position: absolute;
+	background: rgba( 128, 128, 128, 0.1 );
+	font-size: 3em;
+	line-height: 1em;
+	border: 1px solid silver;
+	padding: 5px 0;
+}
+
+.admin-panel .controls > * > * {
+	padding: 0 0.4em;
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+.admin-panel .controls > * > *:hover {
+	opacity: 1;
+	background: white;
+}
+
+.admin-panel .controls > .collection > .delete {
+	color: red;
+	font-weight: bold;
+}
+
+.collection .objecttemplate {
+	display: none;
+}
