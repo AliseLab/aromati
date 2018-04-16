@@ -211,7 +211,7 @@ button:focus{
 
 .button:hover{
     background-color: #FFFFFF;
-    color: #00aafe;
+    color: #88c4dc;
     -webkit-box-shadow: 2.5px 4.33px 10px 0px rgba(0, 0, 0, 0.13);
             box-shadow: 2.5px 4.33px 10px 0px rgba(0, 0, 0, 0.13);
 
@@ -222,7 +222,7 @@ button:focus{
     border-radius: 30px;
     font-size: 16px;
     display: inline-block;
-    background-color: #00AAFE;
+    background-color: #88c4dc;
     color: #fff;
     -webkit-box-shadow: 2.5px 4.33px 10px 0px rgba(0, 0, 0, 0.13);
             box-shadow: 2.5px 4.33px 10px 0px rgba(0, 0, 0, 0.13);
@@ -261,13 +261,13 @@ button:focus{
     }
 
 .service .thumbnail:hover .service__title{
-        color: #00aafe;
+        color: #88c4dc;
       }
 
 .service .thumbnail:hover .material-icons{
-        background-color: rgb( 0, 170, 254 );
-        -webkit-box-shadow: 0px 0px 15px 0px rgb( 0, 170, 254 );
-                box-shadow: 0px 0px 15px 0px rgb( 0, 170, 254 );
+        background-color: #88c4dc;
+        -webkit-box-shadow: 0px 0px 15px 0px #88c4dc;
+                box-shadow: 0px 0px 15px 0px #88c4dc;
         color: #fff;
       }
 
@@ -284,7 +284,7 @@ button:focus{
     height: 70px;
     border-radius: 50%;
     background-color: rgb( 235, 248, 255 );
-    color: rgb( 0, 170, 254 );
+    color: #88c4dc;
     font-size: 30px;
     line-height: 0.933;
     line-height: 2.3;
@@ -307,9 +307,9 @@ button:focus{
 
 .Ellipse_ {
   border-radius: 50%;
-  background-color: rgb( 0, 170, 254 );
-  -webkit-box-shadow: 0px 0px 15px 0px rgb( 0, 170, 254 );
-          box-shadow: 0px 0px 15px 0px rgb( 0, 170, 254 );
+  background-color: #88c4dc;
+  -webkit-box-shadow: 0px 0px 15px 0px #88c4dc;
+          box-shadow: 0px 0px 15px 0px #88c4dc;
   position: absolute;
   left: 284px;
   top: 1154px;
@@ -529,7 +529,7 @@ button:focus{
     }
 
 .project .thumbnail:hover .project__title{
-        color: #00aafe;
+        color: #88c4dc;
       }
 
 .project .thumbnail img{
@@ -613,7 +613,7 @@ button:focus{
 }
 
 #myModal .close{
-    background: #00aafe !important;
+    background: #88c4dc !important;
     z-index: 890;
     color: #fff;
     font-size: 24px;
@@ -704,7 +704,7 @@ button:focus{
   }
 
 .price .panel:hover{
-    background-color: #13BDFF;
+    background-color: #88c4dc;
     border-top: 50px solid transparent;
     border-bottom: 50px solid transparent;
     margin-top: -50px;
@@ -723,7 +723,7 @@ button:focus{
 
 .price .panel:hover .panel__button{
       background-color: #FFFFFF;
-      color: #00aafe;
+      color: #88c4dc;
       border: 2px solid #fff;
     }
 
@@ -938,7 +938,7 @@ button:focus{
   }
 
 .blog .thumbnail:hover .blog__title, .blog .thumbnail:hover .blog__read-more{
-        color: #00aafe;
+        color: #88c4dc;
       }
 
 .blog .thumbnail .caption{
@@ -1005,7 +1005,7 @@ button:focus{
       right: 0;
       top: 0;
       bottom: 0;
-      background-color: #001F37;
+      background-color: #aaa;
       z-index: -1;
     }
 
@@ -1119,7 +1119,7 @@ button:focus{
 
 .footer__bottom-paragraph{
     font-size: 15px;
-    color: #c9c9c9;
+    color: white;
     text-align: center;
     padding-top: 20px;
   }
@@ -1139,7 +1139,7 @@ button:focus{
 }
 
 .flaticon-facebook-letter-logo:hover, .flaticon-twitter-logo:hover, .flaticon-dribbble-logo:hover, .flaticon-behance-logo:hover{
-  color: #00AAFE;
+  color: #88c4dc;
 }
 
 .subscribe-section input[type="email"]{
