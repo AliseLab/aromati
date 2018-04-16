@@ -1005,7 +1005,7 @@ button:focus{
       right: 0;
       top: 0;
       bottom: 0;
-      background-color: #aaa;
+      background-color: #dfdfdf;
       z-index: -1;
     }
 
