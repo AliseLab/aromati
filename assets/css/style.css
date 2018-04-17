@@ -121,7 +121,7 @@ button:focus{
 
 .header .navbar{
     padding-top: 30px;
-    /*margin-bottom: 200px;*/
+    margin-bottom: 0;
   }
 
 @media screen and (max-width: 450px) {
@@ -1156,6 +1156,6 @@ button:focus{
 }
 
 .logo {
-	width: 100%;
-	max-width: 400px;
+	width: 80%;
+	max-width: 300px;
 }
