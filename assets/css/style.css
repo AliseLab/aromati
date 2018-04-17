@@ -115,14 +115,18 @@ button:focus{
     z-index: -1;
   }
 
+.header {
+	text-align: center;
+}
+
 .header .navbar{
     padding-top: 30px;
-    margin-bottom: 200px;
+    /*margin-bottom: 200px;*/
   }
 
 @media screen and (max-width: 450px) {
       .header .navbar{
-        margin-bottom: 150px;
+        /*margin-bottom: 150px;*/
       }
     }
 
@@ -1149,4 +1153,9 @@ button:focus{
   height: 42px; 
   margin-bottom: 30px;
   padding: 0 20px;
+}
+
+.logo {
+	width: 100%;
+	max-width: 400px;
 }

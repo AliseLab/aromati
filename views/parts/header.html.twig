@@ -26,8 +26,11 @@
 				</ul>
 			</div>
 		</nav>
+		<img class="logo" src="img/logo.png" alt=""/>
 		<div class="header__content text-center">
-			<h1 class="header__content__title">{{ trans( req, 'site_title' ) }}</h1>
+			<h1 class="header__content__title">
+				{# {{ trans( req, 'site_title' ) }} #}
+			</h1>
 			<p class="header__content__paragraph">{{ trans( req, 'site_description' ) }}</p>
 			<a class="button button--margin-right button--hover" href="#">{{ trans( req, 'learn_more' ) }}</a> <a class="button button--hover" href="#">{{ trans( req, 'purchase' ) }}</a>
 		</div>
