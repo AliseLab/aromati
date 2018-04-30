@@ -4,12 +4,20 @@ $( document ).ready( function() {
 	var admin_panel_tools = admin_panel.find( '> .tools' );
 	
 	var savebtn = admin_panel.find( '.save' );
+	var errlbl = admin_panel.find( '.error' );
 	
 	var body = $( '.main-wrapper' );
 	
 	var set_unsaved = function( el ) {
 		el.addClass( 'unsaved' );
 		savebtn.removeClass( 'disabled' );
+	}
+	
+	function htmlDecode(input){
+		  var e = document.createElement('div');
+		  e.innerHTML = input;
+		  // handle case of empty input
+		  return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
 	}
 	
 	var tools = {
@@ -125,7 +133,7 @@ $( document ).ready( function() {
 				var datatype = el.attr( 'data-type' );
 				switch ( datatype ) {
 					case 'html': {
-						el.html( data.text );
+						el.html( htmlDecode( data.text ) );
 						break;
 					}
 					case 'placeholder': {
@@ -228,25 +236,46 @@ $( document ).ready( function() {
 	
 	}
 	
+	var showerror = err => {
+		errlbl.stop( true ).html( err ).css( 'opacity', 1 ).show().fadeOut( 5000 );
+	};
+	
 	savebtn.on( 'click', function() {
-		if ( !$(this).hasClass( 'disabled' ) ) {
+		if ( !$(this).hasClass( 'disabled' ) && !$(this).hasClass( 'loading' ) ) {
 			
 			var request = {
 				language: global.language,
 				data: [],
 			};
-			$( '.editable.unsaved' ).each( function() {
+			
+			var unsaved = $( '.editable.unsaved' );
+			
+			unsaved.each( function() {
 				var data = JSON.parse( $(this).attr( 'data-data' ) );
 				tools[ data.tool ].save( $(this), data );
 				request.data.push( data );
-				$(this).removeClass( 'unsaved' );
 			});
 			
+			savebtn.addClass( 'loading' );
 			$.post( '/admin/save', {
 				data: JSON.stringify( request ),
 			}, function( ret ) {
-				savebtn.addClass( 'disabled' );
-			})
+				savebtn.removeClass( 'loading' );
+				if ( ret == 'OK' ) {
+					unsaved.each( function() {
+						$(this).removeClass( 'unsaved' );
+					});
+					savebtn.addClass( 'disabled' );
+				}
+				else {
+					console.log( ret );
+					showerror( 'Error' );
+				}
+			}).fail( function( err ) {
+				savebtn.removeClass( 'loading' );
+				console.log( err );
+				showerror( 'Error' );
+			});
 		}
 	});
 	
@@ -299,14 +328,26 @@ $( document ).ready( function() {
 					( badpos2 < 0 || pos < badpos2 )
 				) {
 					var rawdata = source.substring( pos + 3 );
-					var data = JSON.parse( rawdata );
-					el
-						.addClass( 'editable' )
-						.addClass( data.tool )
-						.attr( 'data-type', type )
-						.attr( 'data-data', rawdata )
-					;
-					tools[ data.tool ].init( el, data );
+					var data = null;
+					try {
+						data = JSON.parse( rawdata );
+					} catch ( e ) {
+						console.log( 'parse error', rawdata );
+					}
+					if ( data ) {
+						el
+							.addClass( 'editable' )
+							.addClass( data.tool )
+							.attr( 'data-type', type )
+							.attr( 'data-data', rawdata )
+						;
+						tools[ data.tool ].init( el, data );
+					}
+					else {
+						el
+							.html( '' );
+						;
+					}
 					return true;
 				}
 			}

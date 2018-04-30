@@ -14,4 +14,8 @@ exports.config = {
 		port: 8080,
 	},
 
+	admin: {
+		check_ip: false,
+	},
+
 };

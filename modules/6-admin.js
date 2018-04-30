@@ -5,18 +5,31 @@ exports.run = function( data, next ) {
 	var CookieParser = require('cookie-parser');
 	data.app.use( CookieParser() );
 	
-	var admin_ip = null;
-	var admin_cookie = null;
-	
 	var check_admin = function ( req, res, next ) {
-		req.is_admin = (
-			( req.cookies.admin == admin_cookie ) &&
-			( req.connection.remoteAddress == admin_ip )
-		);
-		
-		//req.is_admin = true; // tmp
-		
-		next();
+		if ( req.cookies.admin ) {
+			var qry = 'SELECT `cookie` FROM `admin_sessions` WHERE `cookie` = ?';
+			var args = [ req.cookies.admin ];
+			
+			if ( data.config.admin.check_ip ) {
+				qry += ' AND `remote_addr` = ?';
+				args.push( req.connection.remoteAddress );
+			}
+			
+			data.sql.query( qry, args, ( err, results ) => {
+				if ( err )
+					console.log( err );
+				else {
+					req.is_admin = results.length > 0;
+					if ( req.is_admin )
+						res.cookie( 'admin', req.cookies.admin, { maxAge: 900000 } )
+					next();
+				}
+			});
+		}
+		else {
+			req.is_admin = false;
+			next();
+		}
 	}
 	data.app.use( check_admin );
 	
@@ -132,9 +145,7 @@ exports.run = function( data, next ) {
 			var done = () => {
 				saved++;
 				if ( saved == request.data.length ) {
-					
-					res.send( '' );
-					
+					res.send( 'OK' );
 				}
 			}
 			
@@ -155,10 +166,31 @@ exports.run = function( data, next ) {
 			red.redirect( '/' );
 		}
 		else if ( req.body.password == data.settings.admin_password ) {
-			admin_ip = req.connection.remoteAddress;
-			admin_cookie = md5( Math.random() % 99999999999 );
-			res.cookie( 'admin', admin_cookie, { maxAge: 900000 } )
-			res.redirect( '/' );
+			
+			var generate_cookie = ( next ) => {
+				var cookie = md5( Math.random() % 99999999999 ) + md5( Math.random() % 99999999999 ) + md5( Math.random() % 99999999999 ) + md5( Math.random() % 99999999999 );
+				data.sql.query( 'SELECT `cookie` from `admin_sessions` WHERE `cookie` = ?', [ cookie ], ( err, results ) => {
+					if ( err )
+						console.log( err );
+					else {
+						if ( results.length > 0 )
+							return generate_cookie( next );
+						else return next( cookie );
+					}
+				});
+			}
+			
+			generate_cookie( cookie => {
+				data.sql.query( 'INSERT INTO `admin_sessions` ( `cookie`, `remote_addr`, `last_access` ) VALUES ( ?, ?, NOW() )', [ cookie, req.connection.remoteAddress ], ( err, results ) => {
+					if ( err )
+						console.log( err );
+					else {
+						console.log( 'admin login from', req.connection.remoteAddress );
+						res.cookie( 'admin', cookie, { maxAge: 900000 } )
+					}
+					res.redirect( '/' );
+				});
+			});
 		}
 		else {
 			res.redirect( '/admin' );
@@ -167,11 +199,18 @@ exports.run = function( data, next ) {
 	
 	data.app.get( '/logout', function( req, res ) {
 		if ( req.is_admin ) {
-			admin_ip = null;
-			admin_cookie = null;
-			res.clearCookie( 'admin' );
+			data.sql.query( 'DELETE FROM `admin_sessions` WHERE `cookie` = ? AND `remote_addr` = ?', [ req.cookies.admin, req.connection.remoteAddress ], ( err, results ) => {
+				if ( err )
+					console.log( err );
+				else {
+					console.log( 'admin logout from', req.connection.remoteAddress );
+				}
+				res.clearCookie( 'admin' );
+				res.redirect( '/' );
+			});
 		}
-		res.redirect( '/' );
+		else
+			res.redirect( '/' );
 	});
 	
 	function escapeQuotes( unsafe ) {
@@ -193,7 +232,8 @@ exports.run = function( data, next ) {
 	
 	data.makeeditable = function( data ) {
 		data.tool = 'pageedit';
-		return '!@#' + escapeQuotes( JSON.stringify( data ) );
+		var ret = '!@#' + escapeHtml( JSON.stringify( data ) );
+		return ret;
 	}
 	
 	data.twig.extendFunction( 'collection', ( req, objects, type ) => {
