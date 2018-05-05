@@ -20,6 +20,9 @@
 		"express-minify-html": "*",
 		"mysql2": "*",
 		"md5": "*",
-		"cookie-parser": "*"
+		"cookie-parser": "*",
+		"formidable": "*",
+		"read-chunk": "*",
+		"file-type": "*"
 	}
 }

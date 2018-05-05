@@ -39,8 +39,10 @@ exports.run = function( data, next ) {
 											if ( req.is_admin )
 												css.push( 'admin.css' );
 											var js = JSON.parse( JSON.stringify( data.js ) );
-											if ( req.is_admin )
+											if ( req.is_admin ) {
 												js.push( 'admin.js' );
+												js.push( 'admin_upload.js' );
+											}
 											
 											res.render( 'index.html.twig', {
 												'languages' : data.languages,

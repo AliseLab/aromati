@@ -9,9 +9,11 @@
 					<span class="icon-bar"></span>
 				</button>
 				<div class="languages">
-					{% for lang, label in languages %} <a href="/{{ lang }}" {% if
-						lang== language %} class="active"{% endif %}>{{ label }}</a> {%
-					endfor %}
+					{% for lang, label in languages %}
+						<a href="/{{ lang }}" {% if lang== language %} class="active"{% endif %}>
+							{{ label }}
+						</a>
+					{% endfor %}
 				</div>
 				<a class="navbar-brand" href="#">{{ trans( req, 'site_brand' ) }}</a>
 			</div>
@@ -26,6 +28,7 @@
 				</ul>
 			</div>
 		</nav>
+		{{ img( req, 'main_logo', 'logo', 300, 237 ) }}
 		<img class="logo" src="img/logo.png" alt=""/>
 		<div class="header__content text-center">
 			<h1 class="header__content__title">
