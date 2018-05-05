@@ -1,3 +1,5 @@
 /node_modules
 /config.js
 /config.*.js
+/tmp_uploads
+/public/img/uploads
