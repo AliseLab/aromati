@@ -1,4 +1,7 @@
 exports.run = function( data, next ) {
+
+	data.imgpath = 'img/uploads/';
+	data.imgdir = __dirname + '/../public/' + data.imgpath;
 	
 	data.twig = require( 'twig' );
 	if ( data.config.debug )
@@ -66,8 +69,41 @@ exports.run = function( data, next ) {
 				data.css = [ 'app.css' ];
 			}
 			
+			data.update_images = function( next ) {
+				data.sql.query( 'SELECT * FROM `images`', function( err, results ) {
+					if ( err )
+						console.log( err );
+					else {
+						data.images = {};
+						results.forEach( result => {
+							data.images[ result.id ] = result.filename;
+						});
+						next();
+					}
+				})
+			}
+			
+			data.twig.extendFunction( 'img', ( req, imgid, cls, width, height ) => {
+
+				var img = '';
+				if ( data.images[ imgid ] )
+					img = '<img src="' + data.imgpath + data.images[ imgid ] + '" alt="' + data.images[ imgid ] + '"/>';
+				
+				if ( req.is_admin ) {
+					var dt = {
+						imgid: imgid,
+						cls: cls,
+						width: width,
+						height: height,
+					};
+					img = '<div data-img="' + data.makeeditable( dt ) + '">' + img + '</div>';
+				}
+
+				return img;
+			});
 			next();
+			
 		});
 	});
-	
+		
 }

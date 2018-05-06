@@ -68,6 +68,7 @@
 	background: url(/img/loading.gif) no-repeat center;
 	display: inline-block;
 	height: 30px;
+	width: 30px;
 	cursor: default;
 }
 
@@ -90,7 +91,7 @@
 	font-weight: bold;
 }
 
-.admin-panel .controls > * {
+.admin-panel .controls > div {
 	display: none;
 	position: absolute;
 	background: rgba( 128, 128, 128, 0.1 );
@@ -100,14 +101,14 @@
 	padding: 5px 0;
 }
 
-.admin-panel .controls > * > * {
+.admin-panel .controls > div > span {
 	padding: 0 0.4em;
 	cursor: pointer;
 	opacity: 0.5;
 	font-weight: bold;
 }
 
-.admin-panel .controls > * > *:hover {
+.admin-panel .controls > div > span:hover {
 	opacity: 1;
 	background: white;
 }
@@ -123,4 +124,35 @@
 .collection .objecttemplate {
 	display: none;
 	opacity: 0.5;
+}
+
+.imageblock.enabled {
+	outline: 1px solid white;
+}
+
+.imageblock img {
+	width: 100%;
+	height: 100%;
+}
+
+.admin-panel .controls > .img {
+	padding: 0;
+	height: 100px;
+}
+
+.image-upload label {
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	background: url( '/img/upload-image.png' ) no-repeat center;
+	opacity: 0.5;
+	cursor: pointer;
+}
+
+.image-upload label:hover {
+	opacity: 1;
+}
+
+.image-upload label input {
+    display: none;
 }

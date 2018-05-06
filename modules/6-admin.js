@@ -21,7 +21,7 @@ exports.run = function( data, next ) {
 				else {
 					req.is_admin = results.length > 0;
 					if ( req.is_admin )
-						res.cookie( 'admin', req.cookies.admin, { maxAge: 900000 } )
+						res.cookie( 'admin', req.cookies.admin, { maxAge: 99999999999 } )
 					next();
 				}
 			});
@@ -156,9 +156,8 @@ exports.run = function( data, next ) {
 			});
 			
 		}
-		else {
+		else
 			res.status( 403 ).send( '' );
-		}
 	});
 	
 	data.app.post( '/admin', function( req, res ) {
@@ -186,7 +185,7 @@ exports.run = function( data, next ) {
 						console.log( err );
 					else {
 						console.log( 'admin login from', req.connection.remoteAddress );
-						res.cookie( 'admin', cookie, { maxAge: 900000 } )
+						res.cookie( 'admin', cookie, { maxAge: 99999999999 } )
 					}
 					res.redirect( '/' );
 				});

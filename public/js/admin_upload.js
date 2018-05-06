@@ -13,24 +13,10 @@ function uploadFiles(formData) {
         xhr: function () {
             var xhr = new XMLHttpRequest();
 
-            // Add progress event listener to the upload.
-            xhr.upload.addEventListener('progress', function (event) {
-                var progressBar = $('.progress-bar');
-
-                if (event.lengthComputable) {
-                    var percent = (event.loaded / event.total) * 100;
-                    progressBar.width(percent + '%');
-
-                    if (percent === 100) {
-                        progressBar.removeClass('active');
-                    }
-                }
-            });
-
             return xhr;
         }
     }).done(handleSuccess).fail(function (xhr, status) {
-        alert(status);
+        // error?
     });
 }
 
@@ -41,26 +27,21 @@ function uploadFiles(formData) {
  */
 function handleSuccess(data) {
     if (data.length > 0) {
-        var html = '';
-        for (var i=0; i < data.length; i++) {
-            var img = data[i];
-
-            if (img.status) {
-                html += '<div class="col-xs-6 col-md-4"><a href="#" class="thumbnail"><img src="' + img.publicPath + '" alt="' + img.filename  + '"></a></div>';
-            } else {
-                html += '<div class="col-xs-6 col-md-4"><a href="#" class="thumbnail">Invalid file type - ' + img.filename  + '</a></div>';
-            }
-        }
-
-        $('#album').html(html);
+        data = data[0];
+        var img = $( '<img/>' )
+        	.attr( 'src', data.publicPath )
+        	.attr( 'alt', data.filename )
+        ;
+        var block = $( '.imageblock[data-imgid="' + data.imgid + '"]' );
+        block.html( '' )
+        img.appendTo( block );
     } else {
-        alert('No images were uploaded.')
+        //alert('No images were uploaded.')
     }
 }
 
-// Set the progress bar to 0 when a file(s) is selected.
 $('#photos-input').on('change', function () {
-    $('.progress-bar').width('0%');
+    $( '#upload-photos' ).submit();
 });
 
 // On form submit, handle the file uploads.
@@ -71,22 +52,12 @@ $('#upload-photos').on('submit', function (event) {
     var files = $('#photos-input').get(0).files,
         formData = new FormData();
 
-    if (files.length === 0) {
-        alert('Select atleast 1 file to upload.');
-        return false;
-    }
-
-    if (files.length > 3) {
-        alert('You can only upload up to 3 files.');
-        return false;
-    }
-
-    // Append the files to the formData.
-    for (var i=0; i < files.length; i++) {
-        var file = files[i];
+    if ( files.length > 0 ) {
+        var file = files[ 0 ];
         formData.append('photos[]', file, file.name);
+    	formData.append( 'imgid', $(this).attr( 'data-imgid' ) );
+    	
+	    uploadFiles(formData);
     }
-
-    // Note: We are only appending the file inputs to the FormData.
-    uploadFiles(formData);
+    
 });

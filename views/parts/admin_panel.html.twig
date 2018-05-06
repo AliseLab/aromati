@@ -2,7 +2,7 @@
 	<span class="label">Admin mode enabled</span>
 	<nav class="tools2">
 		<span class="error"></span>
-		<span class="a save disabled">Save</span>
+		<span class="a save disabled">{#Save#}</span>
 		<a class="logout" href="/logout">Log out</a>
 	</nav>
 	<nav class="tools">
@@ -14,31 +14,14 @@
 			<span class="add">+</span>
 			<span class="delete">X</span>
 		</div>
+		<div class="img">
+			<form id="upload-photos" class="upload" method="post" action="/upload_photos" enctype="multipart/form-data">
+				<div class="image-upload">
+				    <label>
+					    <input id="photos-input" type="file" name="photo"/>
+				    </label>
+				</div>
+			</form>
+		</div>
 	</div>
-	
-<!-- Photos upload Form -->
-<form id="upload-photos" method="post" action="/upload_photos" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="photos-input">File input</label>
-        <input id="photos-input" type="file" name="photos[]" multiple="multiple" >
-        <p class="help-block">You can upload up to 3 files.</p>
-    </div>
-    <input type="hidden" name="csrf_token" value="just_a_text_field" />
-    <input class="btn btn-default" type="submit" name="Photo Uploads" value="Upload Photos" />
-</form>
-
-<!-- Progress Bar -->
-<div class="row">
-    <div class="col-md-12">
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                <span class="sr-only"></span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Photos Album Container -->
-<div id="album" class="row"></div>
-
 </div>

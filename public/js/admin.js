@@ -8,9 +8,20 @@ $( document ).ready( function() {
 	
 	var body = $( '.main-wrapper' );
 	
+	var autosavetimeout = null;
+	var autosave = function() {
+		if ( autosavetimeout )
+			clearTimeout( autosavetimeout );
+		autosavetimeout = setTimeout( function() {
+			autosavetimeout = null;
+			savebtn.click();
+		}, 1000 );
+	}
+	
 	var set_unsaved = function( el ) {
 		el.addClass( 'unsaved' );
 		savebtn.removeClass( 'disabled' );
+		autosave();
 	}
 	
 	function htmlDecode(input){
@@ -24,6 +35,34 @@ $( document ).ready( function() {
 			
 		pageedit: {
 
+			control_mouseover : function( control, el ) {
+				control
+					.css({
+						top: el.offset().top + 'px',
+						left: ( el.outerWidth() - control.outerWidth() + el.offset().left ) + 'px',
+					})
+					.show()
+				;
+			},
+			control_mouseout : function( control, e ) {
+				if ( e.relatedTarget ) {
+					var target = $( e.relatedTarget );
+					
+					if (
+						target.hasClass( 'object' ) ||
+						target.closest( '.object' ).length > 0 ||
+						target.hasClass( 'objecttemplate' ) ||
+						target.closest( '.objecttemplate' ).length > 0 ||
+						target.closest( '.controls' ).length > 0
+					)
+						return false;
+				}
+				control
+					.hide()
+				;
+				return true;
+			},
+			
 			collection_control : null,
 			collection_current_collection : null,
 			collection_current_object : null,
@@ -36,42 +75,35 @@ $( document ).ready( function() {
 					that.collection_control.find( '.delete' ).show();
 					that.collection_control.find( '.add' ).hide();
 				}
-				that.collection_control
-					.css({
-						top: el.offset().top + 'px',
-						left: ( el.outerWidth() - that.collection_control.outerWidth() + el.offset().left ) + 'px',
-					})
-					.show()
-				;
+				
+				that.control_mouseover( that.collection_control, el );
+				
 				that.collection_current_object = el;
 				that.collection_current_collection = el.closest( '.collection' );
 			},
 			collection_mouseout : function( that, el, e ) {
-				if ( e.relatedTarget ) {
-					var target = $( e.relatedTarget );
-					
-					if (
-						target.hasClass( 'object' ) ||
-						target.closest( '.object' ).length > 0 ||
-						target.hasClass( 'objecttemplate' ) ||
-						target.closest( '.objecttemplate' ).length > 0 ||
-						target.closest( '.controls' ).length > 0
-					)
-						return;
+				if ( that.control_mouseout( that.collection_control, e ) ) {
+					that.collection_current_collection = null;
+					that.collection_current_object = null;
 				}
-				that.collection_current_collection = null;
-				that.collection_current_object = null;
-				that.collection_control
-					.hide()
-				;
+			},
+			img_control : null,
+			
+			init_control : function( control ) {
+				var that = this;
+				control.on( 'mouseout', function( e ) {
+					that.control_mouseout( control, e );
+				});
 			},
 			
 			construct: function() {
-				this.collection_control = $( '.admin-panel .controls .collection' );
 				var that = this;
-				this.collection_control.on( 'mouseout', function( e ) {
-					that.collection_mouseout( that, $(this), e );
-				});
+				
+				this.collection_control = $( '.admin-panel .controls .collection' );
+				this.img_control = $( '.admin-panel .controls .img' );
+
+				this.init_control( this.collection_control );
+				this.init_control( this.img_control );
 				
 				this.collection_control.find( '> .add' ).on( 'click', function() {
 					if ( that.collection_current_object ) {
@@ -144,6 +176,19 @@ $( document ).ready( function() {
 						// nothing to do
 						break;
 					}
+					case 'img': {
+						el
+							.addClass( 'imageblock' )
+							.addClass( 'img' )
+							.addClass( data.cls )
+							.attr( 'data-imgid', data.imgid )
+							.css({
+								width: data.width + 'px',
+								height: data.height + 'px',
+							})
+						;
+						break;
+					}
 					default: {
 						console.log( datatype + '???' );
 					}
@@ -176,6 +221,18 @@ $( document ).ready( function() {
 							template.show();
 						break;
 					}
+					case 'img': {
+						var that = this;
+						el.on( 'mouseover', function( e ) {
+							that.img_control.find( 'form' ).attr( 'data-imgid', data.imgid );
+							that.control_mouseover( that.img_control, el );
+						});
+						el.on( 'mouseout', function( e ) {
+							that.control_mouseout( that.img_control, e );
+						});
+						$( '.imageblock' ).addClass( 'enabled' );
+						break;
+					}
 					default: {
 						console.log( datatype + '???' );
 					}
@@ -198,6 +255,12 @@ $( document ).ready( function() {
 						el.find( '.objecttemplate' ).hide();
 						el.off( 'mouseover', '.object,.objecttemplate' );
 						el.off( 'mouseout', '.object,.objecttemplate' );
+						break;
+					}
+					case 'img': {
+						el.off( 'mouseover');
+						el.off( 'mouseout');
+						$( '.imageblock' ).removeClass( 'enabled' );
 						break;
 					}
 					default: {
@@ -225,6 +288,9 @@ $( document ).ready( function() {
 							data.new_ids.push( +$(this).attr( 'data-id' ) );
 						});
 						break;
+					}
+					case 'img': {
+						// nothing to do, already saved
 					}
 					default: {
 						console.log( datatype + '???' );
@@ -356,7 +422,8 @@ $( document ).ready( function() {
 		
 		trysource( el.html(), 'html' ) ||
 		trysource( el.attr( 'placeholder' ), 'placeholder' ) ||
-		trysource( el.attr( 'data-collection' ), 'collection' );
+		trysource( el.attr( 'data-collection' ), 'collection' ) ||
+		trysource( el.attr( 'data-img' ), 'img' )
 	});
 	
 });

@@ -536,7 +536,7 @@ button:focus{
         color: #88c4dc;
       }
 
-.project .thumbnail img{
+.project .thumbnail .img{
       width: 100%;
     }
 
@@ -975,7 +975,7 @@ button:focus{
     padding-bottom: 20px;
   }
 
-    .blog .thumbnail img{
+    .blog .thumbnail .img{
       width: 100%;
     }
 }
@@ -1158,4 +1158,8 @@ button:focus{
 .logo {
 	width: 80%;
 	max-width: 300px;
+}
+
+.imageblock {
+	display: inline-block;
 }
