@@ -85,9 +85,11 @@ exports.run = function( data, next ) {
 			
 			data.twig.extendFunction( 'img', ( req, imgid, cls, width, height ) => {
 
-				var img = '';
+				var img;
 				if ( data.images[ imgid ] )
-					img = '<img src="' + data.imgpath + data.images[ imgid ] + '" alt="' + data.images[ imgid ] + '"/>';
+					img = '<img src="' + data.imgpath + data.images[ imgid ] + '" alt="' + data.images[ imgid ] + '" width="' + width + '" height="' + height + '"/>';
+				else
+					img = '<div class="img" style="width:' + width + 'px;height:' + height + 'px;"></div>';
 				
 				if ( req.is_admin ) {
 					var dt = {

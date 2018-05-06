@@ -1,6 +1,6 @@
 <div class="col-md-4 {{ cls }}" data-id="{{ id }}">
 	<div class="thumbnail">
-		<i class="material-icons">trending_up</i>
+		{{ img( req, uid ~ '_thumbnail', 'material-icons', 70, 70 ) }}
 		<h4 class="service__title">{{ trans( req, uid ~ '_header', uid ) }}</h4>
 		<p class="service__paragraph">{{ trans( req, uid ~ '_text', uid ) }}</p>
 	</div>

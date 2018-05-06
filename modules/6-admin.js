@@ -87,6 +87,9 @@ exports.run = function( data, next ) {
 							toadd.push( id );
 					});
 					
+					//console.log( 'ADD', toadd );
+					//console.log( 'REMOVE', toremove );
+					
 					var queries = [];
 					toremove.forEach( id => {
 						queries.push({
@@ -106,23 +109,30 @@ exports.run = function( data, next ) {
 					});
 					
 					if ( queries.length > 0 ) {
+						
+						//console.log( 'START' );
+						
 						var i = 0;
-						var done = () => {
-							i++;
-							if ( i == queries.length ) {
-								next();
-							}
-						}
 	
-						queries.forEach( query => {
+						var nextquery = () => {
+							var query = queries[ i ];
+							//console.log( 'QUERY', query );
 							data.sql.query( query.sql, query.args, ( err, results ) => {
 								if ( err ) {
 									console.log( err );
 								}
-								else
-									done();
-							})
-						});
+								else {
+									i++;
+									if ( i < queries.length )
+										return nextquery();
+									else {
+										//console.log( 'DONE' );
+										return next();
+									}
+								}
+							});
+						};
+						nextquery();
 					}
 					else
 						next();

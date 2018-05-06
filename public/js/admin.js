@@ -4,6 +4,7 @@ $( document ).ready( function() {
 	var admin_panel_tools = admin_panel.find( '> .tools' );
 	
 	var savebtn = admin_panel.find( '.save' );
+	var logoutbtn = admin_panel.find( '.logout' );
 	var errlbl = admin_panel.find( '.error' );
 	
 	var body = $( '.main-wrapper' );
@@ -15,13 +16,13 @@ $( document ).ready( function() {
 		autosavetimeout = setTimeout( function() {
 			autosavetimeout = null;
 			savebtn.click();
-		}, 1000 );
+		}, 100 );
 	}
 	
 	var set_unsaved = function( el ) {
 		el.addClass( 'unsaved' );
 		savebtn.removeClass( 'disabled' );
-		autosave();
+		//autosave();
 	}
 	
 	function htmlDecode(input){
@@ -30,17 +31,26 @@ $( document ).ready( function() {
 		  // handle case of empty input
 		  return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
 	}
+
+	logoutbtn.on( 'click', function() {
+		if ( !savebtn.hasClass( 'disabled' ) )
+			return confirm( 'You havent saved changes, continue to logout?' );
+	});
 	
 	var tools = {
 			
 		pageedit: {
 
 			control_mouseover : function( control, el ) {
+				var css = {
+					top: el.offset().top + 'px',
+				}
+				if ( control.hasClass( 'left' ) )
+					css.left = el.offset().left + 'px';
+				else
+					css.left = el.outerWidth() - control.outerWidth() + el.offset().left + 'px';
 				control
-					.css({
-						top: el.offset().top + 'px',
-						left: ( el.outerWidth() - control.outerWidth() + el.offset().left ) + 'px',
-					})
+					.css( css )
 					.show()
 				;
 			},
@@ -49,10 +59,10 @@ $( document ).ready( function() {
 					var target = $( e.relatedTarget );
 					
 					if (
-						target.hasClass( 'object' ) ||
+						/*target.hasClass( 'object' ) ||
 						target.closest( '.object' ).length > 0 ||
 						target.hasClass( 'objecttemplate' ) ||
-						target.closest( '.objecttemplate' ).length > 0 ||
+						target.closest( '.objecttemplate' ).length > 0 ||*/
 						target.closest( '.controls' ).length > 0
 					)
 						return false;
@@ -114,16 +124,19 @@ $( document ).ready( function() {
 							ids.push( +$(this).attr( 'data-id' ) );
 						});
 						
-						var id = 1;
-						while ( ids.indexOf( id ) >= 0 )
-							id++;
+						var newid = 1;
+						ids.forEach( id => {
+							if ( newid <= id )
+								newid = id + 1;
+						});
+						console.log( newid );
 						
-						var objectuid = that.collection_current_collection.attr( 'data-collectiontype' ) + '_' + id;
+						var objectuid = that.collection_current_collection.attr( 'data-collectiontype' ) + '_' + newid;
 						var object = that.collection_current_object
 							.clone()
 							.removeClass( 'objecttemplate' )
 							.addClass( 'object' )
-							.attr( 'data-id', id )
+							.attr( 'data-id', newid )
 						;
 						
 						var templateuid = 'TEMPLATE';
@@ -135,6 +148,13 @@ $( document ).ready( function() {
 								.html( data.text )
 								.attr( 'data-data', JSON.stringify( data ) )
 							;
+							that.init( $(this), data );
+							that.enable( $(this), data );
+						});
+						object.find( '.editable[data-type="img"]' ).each( function() {
+							var data = JSON.parse( $(this).attr( 'data-data' ) );
+							data.imgid = data.imgid.replace( templateuid, objectuid );
+							$(this).attr( 'data-data', JSON.stringify( data ) );
 							that.init( $(this), data );
 							that.enable( $(this), data );
 						});
@@ -224,8 +244,10 @@ $( document ).ready( function() {
 					case 'img': {
 						var that = this;
 						el.on( 'mouseover', function( e ) {
-							that.img_control.find( 'form' ).attr( 'data-imgid', data.imgid );
-							that.control_mouseover( that.img_control, el );
+							if ( !$(this).closest( '.objecttemplate' ).length ) {
+								that.img_control.find( 'form' ).attr( 'data-imgid', data.imgid );
+								that.control_mouseover( that.img_control, el );
+							}
 						});
 						el.on( 'mouseout', function( e ) {
 							that.control_mouseout( that.img_control, e );

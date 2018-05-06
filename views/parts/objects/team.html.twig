@@ -1,10 +1,11 @@
 <div class="col-md-6 col-lg-3 {{ cls }}" data-id="{{ id }}">
 	<div class="thumbnail">
-		<a href="img/team-pic1.png" target="_blank"> <img src="img/team-pic1.png" alt="">
+		{#<a href="img/team-pic1.png" target="_blank">#}
+			{{ img( req, uid ~ '_image', '', 314, 370 ) }}
 			<div class="caption team__caption">
 				<h4 class="team__name">{{ trans( req, uid ~ '_name', uid ) }}</h4>
 				<p class="team__title">{{ trans( req, uid ~ '_role', uid ) }}</p>
 			</div>
-		</a>
+		{#</a>#}
 	</div>
 </div>
