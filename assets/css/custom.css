@@ -21,3 +21,7 @@
 .navbar-header .languages a.active {
 	font-weight: bold;
 }
+
+img {
+	max-width: 100%;
+}
