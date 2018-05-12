@@ -87,7 +87,7 @@ exports.run = function( data, next ) {
 
 				var img;
 				if ( data.images[ imgid ] )
-					img = '<img src="' + data.imgpath + data.images[ imgid ] + '" alt="' + data.images[ imgid ]/* + '" width="' + width + '" height="' + height*/ + '"/>';
+					img = '<img src="' + data.imgpath + data.images[ imgid ] + '" alt="' + data.images[ imgid ] + '" width="' + width /*+ '" height="' + height*/ + '"/>';
 				else
 					img = '<div class="img" style="width:' + width + 'px;height:' + height + 'px;"></div>';
 				
