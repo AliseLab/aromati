@@ -53,10 +53,10 @@ exports.run = function( data, next ) {
 							
 							files.forEach( file => {
 								console.log( '\t' + file );
-								data.fs.readFile( './fixtures/' + file, ( err, data ) => {
+								data.fs.readFile( './fixtures/' + file, ( err, fixture ) => {
 									if ( err )
 										return fail( err );
-									data.sql.query( data.toString(), ( err, results, fields ) => {
+									data.sql.query( fixture.toString(), ( err, results, fields ) => {
 										if ( err )
 											return fail( err.sqlMessage );
 										done();
