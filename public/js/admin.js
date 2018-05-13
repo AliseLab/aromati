@@ -98,6 +98,7 @@ $( document ).ready( function() {
 				}
 			},
 			img_control : null,
+			section_control : null,
 			
 			init_control : function( control ) {
 				var that = this;
@@ -111,9 +112,11 @@ $( document ).ready( function() {
 				
 				this.collection_control = $( '.admin-panel .controls .collection' );
 				this.img_control = $( '.admin-panel .controls .img' );
+				this.section_control = $( '.admin-panel .controls .section' );
 
 				this.init_control( this.collection_control );
 				this.init_control( this.img_control );
+				this.init_control( this.section_control );
 				
 				this.collection_control.find( '> .add' ).on( 'click', function() {
 					if ( that.collection_current_object ) {
@@ -209,6 +212,54 @@ $( document ).ready( function() {
 						;
 						break;
 					}
+					case 'section': {
+						var control = this.section_control.clone();
+						control.attr( 'class', 'control' );
+						control.find( '.name' ).html( data.section );
+						control.find( 'input' ).each( function() {
+							var k = $(this).attr( 'name' );
+							if ( data[ k ] )
+								$(this).attr( 'checked', true );
+						});
+						var switch_order = function( first, second ) {
+							var dt1 = JSON.parse( first.attr( 'data-data' ) );
+							var dt2 = JSON.parse( second.attr( 'data-data' ) );
+							var o = dt1.order;
+							dt1.order = dt2.order;
+							dt2.order = o;
+							first.attr( 'data-data', JSON.stringify( dt1 ) );
+							second.attr( 'data-data', JSON.stringify( dt2 ) );
+							set_unsaved( first );
+							set_unsaved( second );
+						}
+						control.find( '.move.up' ).on( 'click', function() {
+							var section = $(this).closest( '.section' );
+							var prev = section.prev( '.section' );
+							if ( prev.length > 0 ) {
+								prev.insertAfter( section );
+								$( 'body' ).scrollTop( $( 'body' ).scrollTop() );
+								switch_order( section, prev );
+							}
+						});
+						control.find( '.move.down' ).on( 'click', function() {
+							var section = $(this).closest( '.section' );
+							var next = section.next( '.section' );
+							if ( next.length > 0 ) {
+								section.insertAfter( next );
+								$( 'body' ).scrollTop( $( 'body' ).scrollTop() + next.outerHeight() + 28 );
+								switch_order( section, next );
+							}
+						});
+						control.find( 'input[name="enabled"]' ).on( 'change', function() {
+							var section = $(this).closest( '.section' );
+							if ( $(this).is( ':checked' ) )
+								section.removeClass( 'disabled' );
+							else
+								section.addClass( 'disabled' );
+						});
+						control.prependTo( el );
+						break;
+					}
 					default: {
 						console.log( datatype + '???' );
 					}
@@ -255,6 +306,10 @@ $( document ).ready( function() {
 						$( '.imageblock' ).addClass( 'enabled' );
 						break;
 					}
+					case 'section': {
+						el.addClass( 'editing' );
+						break;
+					}
 					default: {
 						console.log( datatype + '???' );
 					}
@@ -285,6 +340,10 @@ $( document ).ready( function() {
 						$( '.imageblock' ).removeClass( 'enabled' );
 						break;
 					}
+					case 'section': {
+						el.removeClass( 'editing' );
+						break;
+					}
 					default: {
 						console.log( datatype + '???' );
 					}
@@ -313,6 +372,14 @@ $( document ).ready( function() {
 					}
 					case 'img': {
 						// nothing to do, already saved
+						break;
+					}
+					case 'section': {
+						var control = el.find( '.control' );
+						control.find( 'input' ).each( function() {
+							data[ $(this).attr( 'name' ) ] = +$(this).is( ':checked' );
+						});
+						break;
 					}
 					default: {
 						console.log( datatype + '???' );
@@ -445,7 +512,8 @@ $( document ).ready( function() {
 		trysource( el.html(), 'html' ) ||
 		trysource( el.attr( 'placeholder' ), 'placeholder' ) ||
 		trysource( el.attr( 'data-collection' ), 'collection' ) ||
-		trysource( el.attr( 'data-img' ), 'img' )
+		trysource( el.attr( 'data-img' ), 'img' ) ||
+		trysource( el.attr( 'data-section' ), 'section' )
 	});
 	
 });

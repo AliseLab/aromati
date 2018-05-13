@@ -161,3 +161,59 @@
 .image-upload label input {
     display: none;
 }
+
+.section .control {
+	background: #fee;
+	display: none;
+}
+
+.section.editing {
+	outline: 1px solid #dbb;
+	margin: 2em 0;
+}
+
+.section.editing .control {
+	display: block;
+}
+
+.section .control .left {
+	float: left;
+}
+
+.section .control .right {
+	float: right;
+}
+
+.section .control .clear {
+	clear: both;
+}
+
+.section.editing .control {
+	padding: 0.2em 1em;
+}
+
+.section.editing .control .name {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.section.editing .control label {
+	margin-top: 0.4em;
+	margin-right: 2em;
+}
+
+.section.editing .control .move {
+	text-decoration: underline;
+	color: blue;
+	margin-left: 1em;
+	cursor: pointer;
+}
+
+.section.disabled {
+	display: none;
+}
+
+.section.disabled.editing {
+	display: block;
+	opacity: 0.5;
+}

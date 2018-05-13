@@ -6,7 +6,11 @@ exports.run = function( data, next ) {
 				data.load_messages( () => {
 					data.update_images( () => {
 					
-						data.sql.query( 'SELECT * FROM `sections` WHERE `enabled` = 1 ORDER BY `order` ASC', [], ( err, results ) => {
+						var qry = 'SELECT * FROM `sections`';
+						if ( !req.is_admin )
+							qry += ' WHERE `enabled` = 1';
+						qry += ' ORDER BY `order` ASC';
+						data.sql.query( qry, [], ( err, results ) => {
 						
 							if ( err ) {
 								console.log( err );
@@ -114,6 +118,21 @@ exports.run = function( data, next ) {
 			data.app.get( '/' + lang, render_func );
 		}
 		
+		data.twig.extendFunction( 'section', ( req, section, dt ) => {
+
+			var section = '<div class="section';
+			
+			if ( req.is_admin ) {
+				if ( !dt.enabled )
+					section += ' disabled';
+				section += '" data-section="' + data.makeeditable( dt );
+			}
+			
+			section += '">';
+			
+			return section;
+		});
+
 		next();
 					
 }

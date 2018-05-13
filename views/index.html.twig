@@ -11,8 +11,10 @@
 
 	{% for section, data in sections %}
 		
-		<a id="{{ section }}"></a>
-		{% include 'sections/' ~ section ~ '.html.twig' with { data: data } %}
+		{{ section( req, section, data ) }}
+			<a id="{{ section }}"></a>
+			{% include 'sections/' ~ section ~ '.html.twig' with { data: data } %}
+		</div>
 		
 	{% endfor %}
 	

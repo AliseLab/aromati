@@ -137,6 +137,31 @@ exports.run = function( data, next ) {
 					else
 						next();
 				}
+				else if ( what.section ) {
+					var qry = 'UPDATE `sections` SET';
+					var args = [];
+					var first = true;
+					for ( var k in what ) {
+						if ( k != 'section' && k != 'tool' && k != 'request' ) {
+							var v = what[ k ];
+							if ( first )
+								first = false;
+							else
+								qry += ', ';
+							qry += '`' + k + '` = ?',
+							args.push( v );
+						}
+					}
+					qry += ' WHERE `section` = ? LIMIT 1';
+					args.push( what.section );
+					data.sql.query( qry, args, ( err, results ) => {
+						if ( err )
+							console.log( err );
+						else
+							next();
+					} )
+					next();
+				}
 				else {
 					console.log( '???', what );
 					next();
