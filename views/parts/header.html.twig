@@ -19,10 +19,10 @@
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav pull-right">
-					<li><a href="#home">{{ trans( req, 'menu_home' ) }}</a></li>
+					{# <li><a href="#home">{{ trans( req, 'menu_home' ) }}</a></li> #}
 					{% for section, data in sections %}
-						{% if data.show_in_menu %}
-							<li><a href="#{{ section }}">{{ trans( req, 'menu_' ~ section ) }}</a></li>
+						{% if data.show_in_menu or req.is_admin %}
+							<li data-menu="{{ section }}"{% if not data.show_in_menu %} class="disabled"{% endif %}><a href="#{{ section }}">{{ trans( req, 'menu_' ~ section ) }}</a></li>
 						{% endif %}
 					{% endfor %}
 				</ul>

@@ -217,3 +217,7 @@
 	display: block;
 	opacity: 0.5;
 }
+
+ul > li.disabled {
+	display: none;
+}

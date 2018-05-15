@@ -25,6 +25,11 @@ $( document ).ready( function() {
 		//autosave();
 	}
 	
+	$( window ).on( 'beforeunload', function(){
+		if ( !savebtn.hasClass( 'disabled' ) )
+			return confirm( 'You haven\'t saved changes! Leave this page anyway?' );
+	});
+	
 	function htmlDecode(input){
 		  var e = document.createElement('div');
 		  e.innerHTML = input;
@@ -224,6 +229,9 @@ $( document ).ready( function() {
 						var switch_order = function( first, second ) {
 							var dt1 = JSON.parse( first.attr( 'data-data' ) );
 							var dt2 = JSON.parse( second.attr( 'data-data' ) );
+							first.insertAfter( second );
+							$( 'ul.nav > li[data-menu="' + dt1.section + '"]').insertAfter( 'ul.nav > li[data-menu="' + dt2.section + '"]' );
+							$( 'ul.footermenu > li[data-menu="' + dt1.section + '"]').insertAfter( 'ul.footermenu > li[data-menu="' + dt2.section + '"]' );
 							var o = dt1.order;
 							dt1.order = dt2.order;
 							dt2.order = o;
@@ -236,27 +244,47 @@ $( document ).ready( function() {
 							var section = $(this).closest( '.section' );
 							var prev = section.prev( '.section' );
 							if ( prev.length > 0 ) {
-								prev.insertAfter( section );
+								switch_order( prev, section );
 								$( 'body' ).scrollTop( $( 'body' ).scrollTop() );
-								switch_order( section, prev );
 							}
 						});
 						control.find( '.move.down' ).on( 'click', function() {
 							var section = $(this).closest( '.section' );
 							var next = section.next( '.section' );
 							if ( next.length > 0 ) {
-								section.insertAfter( next );
-								$( 'body' ).scrollTop( $( 'body' ).scrollTop() + next.outerHeight() + 28 );
 								switch_order( section, next );
+								$( 'body' ).scrollTop( $( 'body' ).scrollTop() + next.outerHeight() + 28 );
 							}
 						});
-						control.find( 'input[name="enabled"]' ).on( 'change', function() {
+						var showinmenuinput = control.find( 'input[name="show_in_menu"]');
+						var showinfooterinput = control.find( 'input[name="show_in_footer"]');
+						var enabledinput = control.find( 'input[name="enabled"]' );
+						
+						var showhideinmenu = function() {
+							var menu = $( 'ul.nav > li[data-menu="' + data.section + '"]');
+							if ( enabledinput.is( ':checked' ) && showinmenuinput.is( ':checked' ) )
+								menu.removeClass( 'disabled' );
+							else
+								menu.addClass( 'disabled' );
+						}
+						var showhideinfooter = function() {
+							var menu = $( 'ul.footermenu > li[data-menu="' + data.section + '"]');
+							if ( enabledinput.is( ':checked' ) && showinfooterinput.is( ':checked' ) )
+								menu.removeClass( 'disabled' );
+							else
+								menu.addClass( 'disabled' );
+						}
+						enabledinput.on( 'change', function() {
 							var section = $(this).closest( '.section' );
 							if ( $(this).is( ':checked' ) )
 								section.removeClass( 'disabled' );
 							else
 								section.addClass( 'disabled' );
+							showhideinmenu();
+							showhideinfooter();
 						});
+						showinmenuinput.on( 'change', showhideinmenu );
+						showinfooterinput.on( 'change', showhideinfooter );
 						control.prependTo( el );
 						break;
 					}

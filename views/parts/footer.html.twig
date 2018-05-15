@@ -17,11 +17,11 @@
 				<div class="col-md-6 col-lg-2">
 					<div class="footer__second">
 						<h2 class="footer__title">{{ trans( req, 'footer_quick_link' ) }}</h2>
-						<ul>
-							<li><a href="#home">{{ trans( req, 'footer_home' ) }}</a></li>	
+						<ul class="footermenu">
+							{# <li><a href="#home">{{ trans( req, 'footer_home' ) }}</a></li> #}	
 							{% for section, data in sections %}
-								{% if data.show_in_footer %}
-									<li><a href="#{{ section }}">{{ trans( req, 'footer_' ~ section ) }}</a></li>
+								{% if data.show_in_footer or req.is_admin %}
+									<li data-menu="{{ section }}"{% if not data.show_in_footer %} class="disabled"{% endif %}><a href="#{{ section }}">{{ trans( req, 'footer_' ~ section ) }}</a></li>
 								{% endif %}
 							{% endfor %}
 						</ul>
