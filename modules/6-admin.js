@@ -44,6 +44,37 @@ exports.run = function( data, next ) {
 			});
 		}
 	});
+
+	var runqueries = ( queries, next ) => {
+		if ( queries.length > 0 ) {
+			
+			//console.log( 'START' );
+			
+			var i = 0;
+	
+			var nextquery = () => {
+				var query = queries[ i ];
+				//console.log( 'QUERY', query );
+				data.sql.query( query.sql, query.args, ( err, results ) => {
+					if ( err ) {
+						console.log( err );
+					}
+					else {
+						i++;
+						if ( i < queries.length )
+							return nextquery();
+						else {
+							//console.log( 'DONE' );
+							return next();
+						}
+					}
+				});
+			};
+			nextquery();
+		}
+		else
+			next();
+	}
 	
 	var tools = {
 			
@@ -108,34 +139,7 @@ exports.run = function( data, next ) {
 						});
 					});
 					
-					if ( queries.length > 0 ) {
-						
-						//console.log( 'START' );
-						
-						var i = 0;
-	
-						var nextquery = () => {
-							var query = queries[ i ];
-							//console.log( 'QUERY', query );
-							data.sql.query( query.sql, query.args, ( err, results ) => {
-								if ( err ) {
-									console.log( err );
-								}
-								else {
-									i++;
-									if ( i < queries.length )
-										return nextquery();
-									else {
-										//console.log( 'DONE' );
-										return next();
-									}
-								}
-							});
-						};
-						nextquery();
-					}
-					else
-						next();
+					runqueries( queries, next );
 				}
 				else if ( what.section ) {
 					var qry = 'UPDATE `sections` SET';
@@ -193,6 +197,58 @@ exports.run = function( data, next ) {
 		}
 		else
 			res.status( 403 ).send( '' );
+	});
+	
+	data.app.post( '/admin/savesettings', function( req, res ) {
+		if ( req.is_admin ) {
+			var request = JSON.parse( req.body.data );
+			
+			data.sql.query( 'SELECT `value_text` FROM `settings` WHERE `key` = ?', [ 'mail_settings' ], ( err, results ) => {
+				if ( err )
+					console.log( err );
+				else {
+					var mail_settings = JSON.parse( results[ 0 ].value_text );
+					var queries = [];
+					for ( var k in request ) {
+						var v = request[ k ];
+						if ( k == 'mail_settings' ) {
+							mail_settings.auth = v.auth;
+							queries.push({
+								sql: 'UPDATE `settings` SET `value_text` = ? WHERE `key` = ?',
+								args: [ JSON.stringify( mail_settings ), 'mail_settings' ],
+							});
+						}
+						else {
+							if ( typeof( v ) === 'object' ) {
+								for ( var lang in v ) {
+									var text = v[ lang ];
+									queries.push({
+										sql: 'INSERT INTO `trans` ( `id`, `language`, `text` ) VALUES ( ?, ?, ? ) ON DUPLICATE KEY UPDATE `text` = ?',
+										args: [ 'settings_' + k, lang, text, text ],
+									});
+								}
+								queries.push({
+									sql: 'UPDATE `settings` SET `value_text` = NULL, `value_trans` = ? WHERE `key` = ?',
+									args: [ 'settings_' + k, k ],
+								});
+							}
+							else
+								queries.push({
+									sql: 'UPDATE `settings` SET `value_trans` = NULL, `value_text` = ? WHERE `key` = ?',
+									args: [ v, k ],
+								});
+						}
+					}
+					
+					runqueries( queries, () => {
+						res.end( 'OK' );
+					});
+					
+				}
+			});
+			
+			//console.log( request );
+		}
 	});
 	
 	data.app.post( '/admin', function( req, res ) {

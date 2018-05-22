@@ -44,6 +44,68 @@ $( document ).ready( function() {
 	
 	var tools = {
 			
+		settings: {
+			enable: function( el, data ) {
+				var setunsaved = function() {
+					el.find( '.submit' ).removeClass( 'disabled' ).removeAttr( 'disabled' );
+				};
+				el.find( 'input,select' ).on( 'change', setunsaved );
+				el.find( 'input,select' ).on( 'keydown', setunsaved );
+				el.find( '.trans > input' ).on( 'change', function() {
+					var valtd = $(this).closest( 'tr ').find( '> td.value' );
+					var single = valtd.find( '> .lang.single' );
+					var multi = valtd.find( '> .lang.multi' );
+					if ( $(this).is( ':checked' ) ) {
+						single.removeClass( 'active' );
+						multi.addClass( 'active' );
+					}
+					else {
+						multi.removeClass( 'active' );
+						single.addClass( 'active' );
+					}
+				});
+				el.find( '.submit' ).on( 'click', function() {
+					var d = {
+						mail_settings: {
+							auth: {},
+						},
+					};
+					el.find( 'td.value > .active input,select' ).each( function() {
+						var k = $(this).attr( 'name' );
+						var v = $(this).val();
+						var pos = k.indexOf( '[' );
+						if ( k == 'user' || k == 'pass' )
+							d.mail_settings.auth[ k ] = v;
+						else if ( k == 'service' )
+							return true;
+						else if ( pos >= 0 ) {
+							var lang = k.substring( pos + 1, pos + 3 );
+							k = k.substring( 0, pos );
+							if ( !d[ k ] )
+								d[ k ] = {};
+							d[ k ][ lang ] = v;
+						}
+						else
+							d[ k ] = v;
+					});
+					var submit = $(this);
+					submit.hide();
+					$.post( '/admin/savesettings', {
+						data: JSON.stringify( d ),
+					}, function( ret ) {
+						if ( ret == 'OK' ) {
+							submit.addClass( 'disabled' ).attr( 'disabled', true ).show();
+						}
+						else
+							alert( 'error!' );
+					});
+				});
+			},
+			disable: function( el, data ) {
+				el.find( '.submit' ).off( 'click' );
+			},
+		},
+			
 		pageedit: {
 
 			control_mouseover : function( control, el ) {
@@ -464,12 +526,19 @@ $( document ).ready( function() {
 	
 	var settool = function( tool ) {
 		$( '.editable' ).each( function() {
-			var data = JSON.parse( $(this).attr( 'data-data' ) );
+			var data;
+			if ( $(this).attr( 'data-tool' ) )
+				data = {
+					tool: $(this).attr( 'data-tool' )
+				};
+			else
+				data = JSON.parse( $(this).attr( 'data-data' ) );
+			
 			if ( $(this).hasClass( 'active' ) && data.tool != tool ) {
 				tools[ data.tool ].disable( $(this), data );
 				$(this).removeClass( 'active' );
 			}
-			if ( !$(this).hasClass( 'active' ) && data.tool == tool ) {
+			if ( tool && !$(this).hasClass( 'active' ) && data.tool == tool ) {
 				$(this).addClass( 'active' );
 				tools[ data.tool ].enable( $(this), data );
 			}

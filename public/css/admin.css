@@ -221,3 +221,61 @@
 ul > li.disabled {
 	display: none;
 }
+
+.admin-panel .settings {
+	position: fixed;
+	left: 267px;
+	display: none;
+	top: 34px;
+	bottom: 0;
+	overflow-y: auto;
+}
+
+.admin-panel .settings.active {
+	display: block;
+}
+
+.admin-panel .settings .inner {
+	padding: 10px;
+	background: #fee;
+	margin-top: 6px;
+	border: 1px solid maroon;
+	border-top: none;
+}
+
+.admin-panel .settings table td {
+	border: 1px solid silver;
+	padding: 0.4em 0.6em;	
+}
+
+.admin-panel .settings table td.value > .lang {
+	display: none;
+}
+
+.admin-panel .settings table td.value > .lang.active {
+	display: block;
+}
+
+.admin-panel .settings table input[type="text"] {
+	width: 100%;
+	padding: 0 0.4em;
+}
+
+.admin-panel .settings .submit {
+	padding: 0 2em;
+	margin: 0 auto;
+	display: block;
+	font-weight: bold;
+}
+
+.admin-panel .settings .submit.disabled {
+	cursor: default;
+	opacity: 0.5;
+}
+
+.admin-panel .settings table td label.trans {
+	display: inline-block;
+	float: right;
+	white-space: nowrap;
+	text-align: right;
+}

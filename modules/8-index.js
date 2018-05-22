@@ -49,7 +49,7 @@ exports.run = function( data, next ) {
 													js.push( 'admin_upload.js' );
 												}
 												
-												res.render( 'index.html.twig', {
+												var renderdata = {
 													'languages' : data.languages,
 													'language' : req.language,
 													'settings' : data.settings.i18n[ req.language ],
@@ -61,7 +61,45 @@ exports.run = function( data, next ) {
 													'is_admin' : req.is_admin,
 													'req' : req,
 													'collections' : collections,
-												});
+												};
+												
+												var renderfunc = () => {
+													res.render( 'index.html.twig', renderdata );
+												}
+												
+												if ( req.is_admin ) {
+													data.sql.query( 'SELECT * FROM `settings` LEFT JOIN `trans` ON `trans`.`id` = `settings`.`value_trans`', [], ( err, results ) => {
+														if ( err )
+															console.log( err );
+														else {
+															var settings = {};
+															results.forEach( result => {
+																var setting = {
+																	key: result.key,
+																	translatable: result.translatable,
+																};
+																if ( result.key == 'mail_settings' )
+																	setting.value = JSON.parse( result.value_text );
+																else {
+																	if ( result.value_trans ) {
+																		if ( settings[ result.key ] )
+																			setting = settings[ result.key ];
+																		else
+																			setting.value = {};
+																		setting.value[ result.language ] = result.text;
+																	}
+																	else
+																		setting.value = result.value_text;
+																}
+																settings[ result.key ] = setting;
+															});
+															renderdata.editsettings = settings;
+															renderfunc();
+														}
+													});
+												}
+												else
+													renderfunc();
 											}
 										});
 									}

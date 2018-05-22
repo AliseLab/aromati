@@ -7,6 +7,7 @@
 	</nav>
 	<nav class="tools">
 		<span data-tool="pageedit">Edit page</span>
+		<span data-tool="settings">Settings</span>
 	</nav>
 	<div class="clear"></div>
 	<div class="controls">
@@ -41,6 +42,43 @@
 				<span class="move down">Move down</span>
 			</div>
 			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="settings editable" data-tool="settings">
+		<div class="inner">
+			<table>
+			{% for setting in editsettings %}
+				<tr data-setting="{{ setting.key }}">
+					<td class="key">
+						{{ setting.key }}
+						{% if setting.translatable %}
+						<label class="trans">
+							<input type="checkbox"{% if setting.value is iterable %} checked{% endif %}/>T
+						</label>
+						{% endif %}
+					</td>
+					<td class="value">
+					{% if setting.key == 'mail_settings' %}
+						<div class="active">
+							<div><span>Service:</span> <select name="service"><option name="gmail" selected>GMail</option></select></div>
+							<div><span>Username:</span> <input type="text" name="user" value="{{ setting.value.auth.user }}"/></div>
+							<div><span>Password:</span> <input type="text" name="pass" value="{{ setting.value.auth.pass }}"/></div>
+						</div>
+					{% else %}
+						<div class="lang multi{% if setting.value is iterable %} active{% endif %}">
+							{% for lang, label in languages %}
+								<span>{{ label }}:</span><input type="text" name="{{ setting.key }}[{{ lang }}]" value="{{ setting.value[ lang ] }}"/><br />
+							{% endfor %}
+						</div>
+						<div class="lang single{% if not setting.value is iterable %} active{% endif %}">
+							<input type="text" name="{{ setting.key }}" value="{% if not setting.value is iterable %}{{ setting.value }}{% endif %}"/>
+						</div>
+					{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+			</table>
+			<button class="submit disabled" disabled>Save</button>
 		</div>
 	</div>
 </div>
