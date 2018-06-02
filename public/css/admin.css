@@ -126,6 +126,10 @@
 	opacity: 0.5;
 }
 
+.imageblock {
+	overflow: hidden;
+}
+
 .imageblock.enabled {
 	outline: 1px solid lime;
 }
