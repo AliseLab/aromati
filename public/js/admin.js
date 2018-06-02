@@ -274,7 +274,7 @@ $( document ).ready( function() {
 							.attr( 'data-imgid', data.imgid )
 							.css({
 								width: data.width + 'px',
-								height: data.height + 'px',
+								'max-height': data.height + 'px',
 							})
 						;
 						break;
@@ -387,6 +387,7 @@ $( document ).ready( function() {
 						el.on( 'mouseover', function( e ) {
 							if ( !$(this).closest( '.objecttemplate' ).length ) {
 								that.img_control.find( 'form' ).attr( 'data-imgid', data.imgid );
+								that.img_control.find( '.size' ).html( data.width + 'x' + data.height );
 								that.control_mouseover( that.img_control, el );
 							}
 						});

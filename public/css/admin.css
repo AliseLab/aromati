@@ -145,6 +145,17 @@
 	height: 40px;
 }
 
+.admin-panel .controls > .img > .size {
+	background: white;
+	position: absolute;
+	top: 0;
+	left: 42px;
+	font-size: 0.5em;
+	line-height: 1em;
+	border: 1px solid lime;
+	opacity: 0.8;
+}
+
 .image-upload label {
 	display: inline-block;
 	width: 40px;
