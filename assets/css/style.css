@@ -1163,3 +1163,81 @@ button:focus{
 .imageblock {
 	display: inline-block;
 }
+
+.contact-form {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba( 128, 128, 128, 0.4 );
+	text-align: center;
+	z-index: 1000;
+	display: none;
+}
+
+.contact-form form {
+	background: url("../img/contact-background.png") no-repeat center;
+	width: 80%;
+	max-width: 60em;
+	text-align: center;
+	box-shadow: 0 0 4px #666;
+	padding: 2em 0;
+	z-index: 1000;
+}
+
+@media screen and ( max-height: 409px ) {
+	.contact-form {
+		position: fixed;
+		overflow-y: scroll;
+		background: rgb( 128, 128, 128 );
+	}
+	.contact-form form {
+		margin: 0 auto;
+		display: inline-block;
+	}
+}
+@media screen and ( min-height: 410px ) {
+	.contact-form form {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+.contact-form form > div {
+	padding: 1em 2em;
+	text-align: center;
+}
+
+.contact-form form input,
+.contact-form form textarea {
+	width: 100%;
+	max-width: 30em;
+	margin: 0 auto;
+}
+
+.contact-form form button {
+	width: 20em;
+	margin: 0 auto;
+}
+
+.contact-form form textarea {
+	resize: none;
+	overflow: visible;
+	min-height: 5.4em;
+}
+
+.contact-form form .close {
+	color: red;
+	opacity: 0.5;
+	text-shadow: 0 1px 0 #555;
+	position: absolute;
+	top: 0;
+	right: 3px;
+}
+
+.contact-form form .close:hover {
+	opacity: 1;
+}

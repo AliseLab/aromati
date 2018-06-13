@@ -185,6 +185,10 @@ $( document ).ready( function() {
 				this.init_control( this.img_control );
 				this.init_control( this.section_control );
 				
+				$( 'button' ).on( 'click', function() {
+					return $(this).find( '[contenteditable="true"]' ).length <= 0;
+				});
+				
 				this.collection_control.find( '> .add' ).on( 'click', function() {
 					if ( that.collection_current_object ) {
 						
