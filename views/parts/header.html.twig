@@ -10,7 +10,7 @@
 				</button>
 				<div class="languages">
 					{% for lang, label in languages %}
-						<a href="/{{ lang }}" {% if lang== language %} class="active"{% endif %}>
+						<a href="/{{ lang }}" {% if lang == language %} class="active"{% endif %}>
 							{{ label }}
 						</a>
 					{% endfor %}

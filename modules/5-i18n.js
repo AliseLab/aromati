@@ -60,15 +60,18 @@ exports.run = function( data, next ) {
 		});
 	};
 	
+	data.trans = function( msgid, lang ) {
+		if ( typeof data.messages[ lang ] == 'undefined' || typeof data.messages[ lang ][ msgid ] == 'undefined' )
+			return msgid;
+		else
+			return data.messages[ lang ][ msgid ];
+	}
+	
 	data.twig.extendFunction( 'trans', ( req, msgid, objectuid ) => {
 		
 		var lang = req.language;
 		
-		var text;
-		if ( typeof data.messages[ lang ] == 'undefined' || typeof data.messages[ lang ][ msgid ] == 'undefined' )
-			text = msgid;
-		else
-			text = data.messages[ lang ][ msgid ];
+		var text = data.trans( msgid, lang );
 		
 		if ( req.is_admin ) {
 			var dt = {

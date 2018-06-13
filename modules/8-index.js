@@ -61,6 +61,7 @@ exports.run = function( data, next ) {
 													'is_admin' : req.is_admin,
 													'req' : req,
 													'collections' : collections,
+													'mail_error_internal_error' : data.trans( 'mail_error_internal_error', req.language ),
 												};
 												
 												var renderfunc = () => {

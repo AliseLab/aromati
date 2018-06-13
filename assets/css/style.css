@@ -1223,6 +1223,10 @@ button:focus{
 	margin: 0 auto;
 }
 
+.contact-form form button.disabled {
+	opacity: 0.5;
+}
+
 .contact-form form textarea {
 	resize: none;
 	overflow: visible;
@@ -1240,4 +1244,20 @@ button:focus{
 
 .contact-form form .close:hover {
 	opacity: 1;
+}
+
+.contact-form form > .result {
+	padding: 0;
+	margin: 0 3em;
+	background: rgba( 255, 255, 255, 0.5 );
+}
+
+.contact-form form > .result.success {
+	color: green;
+	background: rgba( 200, 255, 200, 0.5 );
+}
+
+.contact-form form > .result.error {
+	color: red;
+	background: rgba( 255, 200, 200, 0.5 );
 }
