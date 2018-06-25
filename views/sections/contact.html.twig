@@ -1,9 +1,45 @@
+
+{#
 <section class="contact contact--bg">
 	<div class="container">
-		<div class="page-section text-center">
-			<h2 class="page-section__title--white">{{ trans( req, 'contact_header' ) }}</h2>
-			<p class="page-section__paragraph--white">{{ trans( req, 'contact_text' ) }}</p>
-			<a class="contact button button--hover" href="#">{{ trans( req, 'contact_us' ) }}</a>
+		<div class="page-section text-center">#}
+
+<script>
+	var mail_error_internal_error = '{{ mail_error_internal_error }}';
+</script>
+
+<div class="contact-form">
+	<a id="contact"></a>
+	
+	<form action="/mail" method="post" autocomplete="off">
+		<br/>
+		<h2 class="page-section__title--white">{{ trans( req, 'contact_title' ) }}</h2>
+	
+		<input type="hidden" name="lang" value="{{ language }}"/>
+		<div>
+			<input class="form-control" type="text" name="name" value="" placeholder="{{ trans( req, 'contact_form_name' ) }}" />
 		</div>
+		<div>
+			<input class="form-control" type="email" name="email" value="" placeholder="{{ trans( req, 'contact_form_email' ) }}" />
+		</div>
+		<div>
+			<input class="form-control" type="tel" name="phone" value="" placeholder="{{ trans( req, 'contact_form_phone' ) }}" />
+		</div>
+		<div>
+			<textarea class="form-control" name="message" placeholder="{{ trans( req, 'contact_form_comments' ) }}"></textarea>
+		</div>
+		<div class="result"></div>
+		<div>
+			<button class="button button--hover" type="submit">
+				{{ trans( req, 'contact_form_submit' ) }}
+			</button>
+		</div>
+		<br/><br/>
+	</form>
+</div>
+
+{#		</div>
 	</div>
 </section>
+#}
+

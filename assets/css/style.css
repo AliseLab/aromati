@@ -1165,28 +1165,28 @@ button:focus{
 }
 
 .contact-form {
-	position: absolute;
+	/*position: absolute;
 	left: 0;
 	top: 0;
 	width: 100%;
-	height: 100%;
-	background: rgba( 128, 128, 128, 0.4 );
+	height: 100%;*/
+	/*background: rgba( 128, 128, 128, 0.4 );*/
 	text-align: center;
-	z-index: 1000;
-	display: none;
+	/*z-index: 1000;
+	display: none;*/
 }
 
 .contact-form form {
 	background: url("../img/contact-background.png") no-repeat center;
-	width: 80%;
-	max-width: 60em;
+	width: 100%;
+	/*max-width: 60em;*/
 	text-align: center;
-	box-shadow: 0 0 4px #666;
-	padding: 2em 0;
-	z-index: 1000;
+	/*box-shadow: 0 0 4px #666;*/
+	/*padding: 2em 0;
+	z-index: 1000;*/
 }
 
-@media screen and ( max-height: 409px ) {
+/*@media screen and ( max-height: 409px ) {
 	.contact-form {
 		position: fixed;
 		overflow-y: scroll;
@@ -1204,7 +1204,7 @@ button:focus{
 		left: 50%;
 		transform: translate(-50%, -50%);
 	}
-}
+}*/
 
 .contact-form form > div {
 	padding: 1em 2em;
@@ -1221,6 +1221,10 @@ button:focus{
 .contact-form form button {
 	width: 20em;
 	margin: 0 auto;
+}
+
+.contact-form form button:hover {
+	margin-bottom: 2px;
 }
 
 .contact-form form button.disabled {

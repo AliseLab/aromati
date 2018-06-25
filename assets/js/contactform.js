@@ -9,36 +9,6 @@ $( document ).ready( function() {
 		});
 	}
 	
-	var closing = false;
-	var openfunc = function() {
-		clearform();
-		result.html( '' );
-		formdiv.stop( true ).fadeIn( 'fast', function() {
-			
-		});
-		formdiv.find( 'input, textarea' ).each( function() {
-			$(this).focus();
-			return false;
-		});
-		return false;
-	}
-	var closefunc = function() {
-		if ( !closing ) {
-			closing = true;
-			formdiv.stop( true ).fadeOut( 'fast', function() {
-				closing = false;
-			});
-		}
-		return false;
-	}
-	
-	formdiv.on( 'click', function(e) {
-		if ( $( e.target ).closest( 'form' ).length <= 0 )
-			closefunc();
-	});
-	formdiv.on( 'click', '.close', closefunc );
-	$( 'a.contact' ).on( 'click', openfunc );
-	
 	form.on( 'submit', function( e ) {
 		
 		var btn = form.find( 'button' );

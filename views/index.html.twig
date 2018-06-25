@@ -9,8 +9,6 @@
 
 	{% include 'parts/header.html.twig' %}
 	
-	{% include 'parts/contact_form.html.twig' %}
-
 	{% for section, data in sections %}
 		
 		{{ section( req, section, data ) }}
